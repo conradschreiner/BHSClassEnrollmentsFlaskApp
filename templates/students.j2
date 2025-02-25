@@ -38,6 +38,7 @@
         {% for key in student.keys() %}
         <td>{{student[key]}}</td>
         {% endfor %}
+          <td><button type='button' onclick="delete_student('studentID')" >remove</button></td>
       </tr>
     {% endfor %}
     </table>

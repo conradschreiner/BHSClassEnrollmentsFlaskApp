@@ -1,15 +1,43 @@
 import MySQLdb
 import os
 from dotenv import load_dotenv, find_dotenv
+import logging
+import time
+
+# check user
+user_id = input("Enter your ID: ")
+
+# store current run date for logging files
+run_date_log = time.strftime('%Y-%m-%d-%H:%M')
+
+log_filename = fr'program_logs\run_log_db_connector_{run_date_log}.txt'
+
+# Configure logging to output to both console and a file
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_filename),
+        logging.StreamHandler()
+    ]
+)
 
 # Load our environment variables from the .env file in the root of our project.
 load_dotenv(find_dotenv())
 
-# Set the variables in our application with those environment variables
-host = "" # os.environ.get("340DBHOST") # replace with your database URL
-user = "" # os.environ.get("340DBUSER") # replace with your database username
-passwd = "" # replace with your database password
-db = "" # os.environ.get("340DB")
+if user_id == "schrecon":
+    # Set the variables in our application with those environment variables
+    host = os.environ.get("classMySQLurl") # replace with your database URL
+    user = "cs340_schrecon" # os.environ.get("classMySQLusername") # replace with your database username
+    passwd = os.environ.get("classMySQLpw") # replace with your database password
+    db = "cs340_schrecon" # os.environ.get("340DB")
+elif user_id == 'schwarir':
+    host = "classmysql.engr.oregonstate.edu"
+    user = "cs340_schwarir"
+    passwd = "<PASSWORD>"
+    db = "cs340_schwarir"
+else:
+    logging.error(f"User {user_id} not found.")
 
 def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     '''
@@ -31,14 +59,14 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     '''
 
     if db_connection is None:
-        print("No connection to the database found! Have you called connect_to_database() first?")
+        logging.info("No connection to the database found! Have you called connect_to_database() first?")
         return None
 
     if query is None or len(query.strip()) == 0:
-        print("query is empty! Please pass a SQL query in query")
+        logging.info("query is empty! Please pass a SQL query in query")
         return None
 
-    print(f"Executing {query} with {query_params}");
+    logging.info(f"Executing {query} with {query_params}");
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
     cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
 
@@ -56,11 +84,11 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     return cursor
 
 if __name__ == '__main__':
-    print("Executing a sample query on the database using the credentials from db_credentials.py")
+    logging.info("Executing a sample query on the database using the credentials from db_credentials.py")
     db = connect_to_database()
     query = "SELECT * from students;"
     results = execute_query(db, query);
-    print(f"Printing results of {query}")
+    logging.info(f"logging.infoing results of {query}")
 
     for r in results.fetchall():
-        print(r)
+        logging.info(r)
