@@ -13,8 +13,8 @@ SET foreign_key_checks=0;
 -- -----------------------------------------------------
 -- Schema cs340_schrecon
 -- -----------------------------------------------------
---CREATE SCHEMA IF NOT EXISTS `tcs340_schrecon` DEFAULT CHARACTER SET utf8 ;
---	USE `cs340_schrecon` ; -- cs340_schwarir
+-- CREATE SCHEMA IF NOT EXISTS `tcs340_schrecon` DEFAULT CHARACTER SET utf8 ;
+USE `cs340_schrecon` ; -- cs340_schwarir
 
 -- -----------------------------------------------------
 -- Table `cs340_schrecon`.`GradeLevels`
