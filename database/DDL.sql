@@ -11,36 +11,36 @@ SET unique_checks=0;
 SET foreign_key_checks=0;
 -- 
 -- -----------------------------------------------------
--- Schema BHS_Class_Enrollments
+-- Schema cs340_schrecon
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `BHS_Class_Enrollments` DEFAULT CHARACTER SET utf8 ;
---	USE `BHS_Class_Enrollments` ;
+--CREATE SCHEMA IF NOT EXISTS `tcs340_schrecon` DEFAULT CHARACTER SET utf8 ;
+--	USE `cs340_schrecon` ; -- cs340_schwarir
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`GradeLevels`
+-- Table `cs340_schrecon`.`GradeLevels`
 -- ----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`GradeLevels` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`GradeLevels` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`GradeLevels` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`GradeLevels` (
   `gradeLevelID` INT NOT NULL AUTO_INCREMENT,
   `gradeName` VARCHAR(45) NOT NULL,
   `gradeNumber` INT(2) NOT NULL,
   PRIMARY KEY (`gradeLevelID`))
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `gradeLevelID_UNIQUE` ON `BHS_Class_Enrollments`.`GradeLevels` (`gradeLevelID` ASC) INVISIBLE;
+-- CREATE UNIQUE INDEX `gradeLevelID_UNIQUE` ON `cs340_schrecon`.`GradeLevels` (`gradeLevelID` ASC) INVISIBLE;
 
--- CREATE UNIQUE INDEX `gradeName_UNIQUE` ON `BHS_Class_Enrollments`.`GradeLevels` (`gradeName` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `gradeName_UNIQUE` ON `cs340_schrecon`.`GradeLevels` (`gradeName` ASC) VISIBLE;
 
--- CREATE UNIQUE INDEX `gradeNumber_UNIQUE` ON `BHS_Class_Enrollments`.`GradeLevels` (`gradeNumber` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `gradeNumber_UNIQUE` ON `cs340_schrecon`.`GradeLevels` (`gradeNumber` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`Students`
+-- Table `cs340_schrecon`.`Students`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`Students` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`Students` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Students` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`Students` (
   `studentID` INT NOT NULL AUTO_INCREMENT,
   `gradeLevelID` INT NOT NULL,
   `fName` VARCHAR(45) NOT NULL,
@@ -49,20 +49,20 @@ CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Students` (
   PRIMARY KEY (`studentID`),
   CONSTRAINT `idGradeLevel`
     FOREIGN KEY (`gradeLevelID`)
-    REFERENCES `BHS_Class_Enrollments`.`GradeLevels` (`gradeLevelID`))
+    REFERENCES `cs340_schrecon`.`GradeLevels` (`gradeLevelID`))
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `studentID_UNIQUE` ON `BHS_Class_Enrollments`.`Students` (`studentID` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `studentID_UNIQUE` ON `cs340_schrecon`.`Students` (`studentID` ASC) VISIBLE;
 
--- CREATE INDEX `gradeLevelID_idx` ON `BHS_Class_Enrollments`.`Students` (`gradeLevelID` ASC) VISIBLE;
+-- CREATE INDEX `gradeLevelID_idx` ON `cs340_schrecon`.`Students` (`gradeLevelID` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`Teachers`
+-- Table `cs340_schrecon`.`Teachers`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`Teachers` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`Teachers` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Teachers` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`Teachers` (
   `teacherID` INT NOT NULL AUTO_INCREMENT,
   `fName` VARCHAR(45) NOT NULL,
   `lName` VARCHAR(45) NOT NULL,
@@ -71,27 +71,27 @@ CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Teachers` (
   PRIMARY KEY (`teacherID`))
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `teachersID_UNIQUE` ON `BHS_Class_Enrollments`.`Teachers` (`teacherID` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `teachersID_UNIQUE` ON `cs340_schrecon`.`Teachers` (`teacherID` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`Departments`
+-- Table `cs340_schrecon`.`Departments`
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`Departments` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`Departments` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Departments` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`Departments` (
   `departmentID` INT NOT NULL AUTO_INCREMENT,
   `subjectArea` VARCHAR(45) NOT NULL UNIQUE,
   PRIMARY KEY (`departmentID`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`Courses`
+-- Table `cs340_schrecon`.`Courses`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`Courses` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`Courses` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Courses` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`Courses` (
   `courseID` INT NOT NULL AUTO_INCREMENT,
   `gradeLevelID` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
@@ -100,22 +100,22 @@ CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Courses` (
   PRIMARY KEY (`courseID`),
   CONSTRAINT `gradeLevelID`
     FOREIGN KEY (`gradeLevelID`)
-    REFERENCES `BHS_Class_Enrollments`.`GradeLevels` (`gradeLevelID`),
+    REFERENCES `cs340_schrecon`.`GradeLevels` (`gradeLevelID`),
     CONSTRAINT `departmentID`
     FOREIGN KEY (`departmentID`)
-    REFERENCES `BHS_Class_Enrollments`.`Departments` (`departmentID`))
+    REFERENCES `cs340_schrecon`.`Departments` (`departmentID`))
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `courseID_UNIQUE` ON `BHS_Class_Enrollments`.`Courses` (`courseID` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `courseID_UNIQUE` ON `cs340_schrecon`.`Courses` (`courseID` ASC) VISIBLE;
 
--- CREATE INDEX `gradeLevelID_idx` ON `BHS_Class_Enrollments`.`Courses` (`gradeLevelID` ASC) VISIBLE;
+-- CREATE INDEX `gradeLevelID_idx` ON `cs340_schrecon`.`Courses` (`gradeLevelID` ASC) VISIBLE;
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`ClassSections`
+-- Table `cs340_schrecon`.`ClassSections`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`ClassSections` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`ClassSections` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`ClassSections` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`ClassSections` (
   `classSectionID` INT NOT NULL AUTO_INCREMENT,
   `courseID` INT NOT NULL,
   `teacherID` INT,
@@ -126,26 +126,26 @@ CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`ClassSections` (
   PRIMARY KEY (`classSectionID`),
   CONSTRAINT `courseID`
     FOREIGN KEY (`courseID`)
-    REFERENCES `BHS_Class_Enrollments`.`Courses` (`courseID`),
+    REFERENCES `cs340_schrecon`.`Courses` (`courseID`),
   CONSTRAINT `teacherID`
     FOREIGN KEY (`teacherID`)
-    REFERENCES `BHS_Class_Enrollments`.`Teachers` (`teacherID`)
+    REFERENCES `cs340_schrecon`.`Teachers` (`teacherID`)
     ON UPDATE CASCADE ) -- CASCADE When a teacher is updated (specific Update functionality not implemented on Teachers table yet)
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `classSectionID_UNIQUE` ON `BHS_Class_Enrollments`.`ClassSections` (`classSectionID` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `classSectionID_UNIQUE` ON `cs340_schrecon`.`ClassSections` (`classSectionID` ASC) VISIBLE;
 
--- CREATE INDEX `courseID_idx` ON `BHS_Class_Enrollments`.`ClassSections` (`courseID` ASC) VISIBLE;
+-- CREATE INDEX `courseID_idx` ON `cs340_schrecon`.`ClassSections` (`courseID` ASC) VISIBLE;
 
--- CREATE INDEX `teacherID_idx` ON `BHS_Class_Enrollments`.`ClassSections` (`teacherID` ASC) VISIBLE;
+-- CREATE INDEX `teacherID_idx` ON `cs340_schrecon`.`ClassSections` (`teacherID` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
--- Table `BHS_Class_Enrollments`.`Enrollments`
+-- Table `cs340_schrecon`.`Enrollments`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `BHS_Class_Enrollments`.`Enrollments` ;
+DROP TABLE IF EXISTS `cs340_schrecon`.`Enrollments` ;
 
-CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Enrollments` (
+CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`Enrollments` (
   `enrollmentID` INT NOT NULL AUTO_INCREMENT,
   `studentID` INT NOT NULL,
   `classSectionID` INT NOT NULL,
@@ -153,29 +153,29 @@ CREATE TABLE IF NOT EXISTS `BHS_Class_Enrollments`.`Enrollments` (
   PRIMARY KEY (`enrollmentID`),
   CONSTRAINT `idStudent`
     FOREIGN KEY (`studentID`)
-    REFERENCES `BHS_Class_Enrollments`.`Students` (`studentID`)
+    REFERENCES `cs340_schrecon`.`Students` (`studentID`)
     ON DELETE CASCADE, -- this is in reference to the "DELETable" record - ensuring the DELETE is normalized through the DB
   CONSTRAINT `classSectionID`
     FOREIGN KEY (`classSectionID`)
-    REFERENCES `BHS_Class_Enrollments`.`ClassSections` (`classSectionID`)
+    REFERENCES `cs340_schrecon`.`ClassSections` (`classSectionID`)
     ON UPDATE CASCADE -- this is for the "NULLable" M:M relationship - ensuring the UPDATE is normalized through the DB
 )
 ENGINE = InnoDB;
 
--- CREATE UNIQUE INDEX `enrollmentID_UNIQUE` ON `BHS_Class_Enrollments`.`Enrollments` (`enrollmentID` ASC) VISIBLE;
+-- CREATE UNIQUE INDEX `enrollmentID_UNIQUE` ON `cs340_schrecon`.`Enrollments` (`enrollmentID` ASC) VISIBLE;
 
--- CREATE INDEX `studentID_idx` ON `BHS_Class_Enrollments`.`Enrollments` (`studentID` ASC) INVISIBLE;
+-- CREATE INDEX `studentID_idx` ON `cs340_schrecon`.`Enrollments` (`studentID` ASC) INVISIBLE;
 
--- CREATE INDEX `classSectionID_idx` ON `BHS_Class_Enrollments`.`Enrollments` (`classSectionID` ASC) VISIBLE;
+-- CREATE INDEX `classSectionID_idx` ON `cs340_schrecon`.`Enrollments` (`classSectionID` ASC) VISIBLE;
 
 -- GradeLevels
-INSERT INTO `BHS_Class_Enrollments`.`GradeLevels`
+INSERT INTO `cs340_schrecon`.`GradeLevels`
 (`gradeName`, `gradeNumber`)
 VALUES
 ('Freshman', 9), ('Sophomore', 10), ('Junior', 11), ('Senior', 12);
 
 -- teachers
-INSERT INTO `BHS_Class_Enrollments`.`Teachers`
+INSERT INTO `cs340_schrecon`.`Teachers`
 (`fName`, `lName`, `birthdate`, `isCurrentlyEmployed`)
 VALUES ('Kate', 'Jones', '1980-03-19', 1), ('Brandon', 'Lynn', '1990-11-24', 1),
     ('Dave', 'Kim', '1975-07-02', 1), ('Ruth', 'Rosenberg', '1980-12-31', 1),
@@ -186,118 +186,118 @@ VALUES ('Kate', 'Jones', '1980-03-19', 1), ('Brandon', 'Lynn', '1990-11-24', 1),
 
 
 -- Students
-INSERT INTO `BHS_Class_Enrollments`.`Students`
+INSERT INTO `cs340_schrecon`.`Students`
 (`gradeLevelID`, `fName`, `lName`, `birthdate`) 
-VALUES ((SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeNumber` = 9), 'Molly', 'Brown', '2009-11-08'), 
-((SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeNumber` = 10), 'Adam', 'Armstrong', '2009-05-20'), 
-((SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where  `gradeNumber` = 11), 'Priyanka', 'Patel', '2007-07-11'),
-((SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeNumber` = 11), 'Rahul', 'Patel', '2007-07-11');
+VALUES ((SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeNumber` = 9), 'Molly', 'Brown', '2009-11-08'), 
+((SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeNumber` = 10), 'Adam', 'Armstrong', '2009-05-20'), 
+((SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where  `gradeNumber` = 11), 'Priyanka', 'Patel', '2007-07-11'),
+((SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeNumber` = 11), 'Rahul', 'Patel', '2007-07-11');
 
 -- Students additional sample data
-INSERT INTO `BHS_Class_Enrollments`.`Students` (`gradeLevelID`, `fName`, `lName`, `birthdate`) 
-VALUES ((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 9), 'Paul', 'Paulson', '2009-11-08'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 9), 'John', 'Johnson', '2009-11-17'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 12), 'Robert', 'Robertson', '2009-08-07'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 12), 'Fredrick', 'Fredrickson', '2012-01-10'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 9), 'Olaf', 'Olafson', '2009-08-07'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 12), 'Howard', 'Howardson', '2007-10-09'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 10), 'Erik', 'Erikson', '2009-06-04'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 10), 'Sarah', 'Smith', '2009-03-11'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 10), 'Hideo', 'Kojima', '2009-06-25'),
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 11), 'Paul', 'Atreides', '2008-07-12'), -- note: this student has only had one class section enrollment - a class section can have only one student in it
-((SELECT `gradeLevelID` FROM `BHS_Class_Enrollments`.`GradeLevels` WHERE `gradeNumber` = 12), 'Ximena', 'Cuaron', '2007-07-12');
+INSERT INTO `cs340_schrecon`.`Students` (`gradeLevelID`, `fName`, `lName`, `birthdate`) 
+VALUES ((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 9), 'Paul', 'Paulson', '2009-11-08'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 9), 'John', 'Johnson', '2009-11-17'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 12), 'Robert', 'Robertson', '2009-08-07'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 12), 'Fredrick', 'Fredrickson', '2012-01-10'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 9), 'Olaf', 'Olafson', '2009-08-07'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 12), 'Howard', 'Howardson', '2007-10-09'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 10), 'Erik', 'Erikson', '2009-06-04'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 10), 'Sarah', 'Smith', '2009-03-11'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 10), 'Hideo', 'Kojima', '2009-06-25'),
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 11), 'Paul', 'Atreides', '2008-07-12'), -- note: this student has only had one class section enrollment - a class section can have only one student in it
+((SELECT `gradeLevelID` FROM `cs340_schrecon`.`GradeLevels` WHERE `gradeNumber` = 12), 'Ximena', 'Cuaron', '2007-07-12');
 
 -- Departments
-INSERT INTO `BHS_Class_Enrollments`.`Departments`
+INSERT INTO `cs340_schrecon`.`Departments`
 (`subjectArea`)
 VALUES ('English'), ('History'), ('Math'), ('Science'), ('Electives'), ('Foreign Languages');
 
 -- Courses
-INSERT INTO `BHS_Class_Enrollments`.`Courses`
+INSERT INTO `cs340_schrecon`.`Courses`
 (`gradeLevelID`, `name`, `departmentID`, `isCurrentlyOffered`)
 VALUES 
 (	-- Freshman level English Course
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Freshman'), 
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Freshman'), 
 	'English', 
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'English'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'English'),
 	1
 ), 
 (	-- Freshman Spanish, no ClassSections yet
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Freshman'), 
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Freshman'), 
 	'Spanish', 
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'Foreign Languages'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'Foreign Languages'),
 	1
 ),
 (	-- Drivers Ed Elective
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Sophomore'), 
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Sophomore'), 
 	"Driver's Ed", 
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'Electives'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'Electives'),
 	1
 ),
 (	-- Sophomore level Geometry
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Sophomore'), 
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Sophomore'), 
 	'Geometry', 
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'Math'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'Math'),
 	1
 ),
 (	-- Anatomy and Physiology, no ClassSections yet
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Junior'),
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Junior'),
 	'Anatomy and Physiology',
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'Science'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'Science'),
 	1
 ),
 ( 	-- Junior level US History
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Junior'),
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Junior'),
 	'US History',
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'History'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'History'),
 	1
 	
 ),
 (	-- Senior level AP Calc
-	(SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Senior'), 
+	(SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Senior'), 
 	'AP Calculus', 
-	(SELECT `departmentID` from `BHS_Class_Enrollments`.`Departments` where `subjectArea` = 'Math'),
+	(SELECT `departmentID` from `cs340_schrecon`.`Departments` where `subjectArea` = 'Math'),
 	1
 );
 
 -- ClassSections
-INSERT INTO `BHS_Class_Enrollments`.`ClassSections`
+INSERT INTO `cs340_schrecon`.`ClassSections`
 (`courseID`, `teacherID`, `startDate`, `endDate`, `period`, `classroom`)
 VALUES ( -- Freshman English with Kate Jones, Period 9, Classroom 77
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones'), 
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones'), 
 	'2024-09-01', 
 	'2025-06-01',  
 	9, 
 	77
 ),
 (	-- Senior AP Calc taught by Brandon Lynn, Period 2, Classroom 13
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn'), 
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn'), 
 	'2024-09-01', 
 	'2025-06-01',  
 	2, 
 	13
 ),
 (	-- Senior AP Calc course taught by Ruth Rosenberg, Period 9, Classroom 25
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg'), 
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg'), 
 	'2024-09-01', 
 	'2025-06-01',  
 	9, 
 	25
 ),
 (	-- Senior AP Calc course taught by Ruth Rosenberg, Period 3, Classroom 25
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg'), 
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg'), 
 	'2024-09-01', 
 	'2025-06-01',  
 	3, 
 	25
 ),
 (	-- Sophomore Geometry course taught by Brandon Lynn, Period 8, Classroom 74
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Geometry'),
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn'), 
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Geometry'),
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn'), 
 	'2024-09-01', 
 	'2025-06-01',  
 	8, 
@@ -305,39 +305,39 @@ VALUES ( -- Freshman English with Kate Jones, Period 9, Classroom 77
 	
 ),
 (	-- Sophomore Driver's Ed course taught by Dave Kim, Period 5, Classroom 120
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = "Driver's Ed"), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim'),
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = "Driver's Ed"), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim'),
 	'2023-09-01', 
 	'2024-06-01', 
 	5, 
 	120
 ),
 (	-- Junior US History course taught by Sandra Springfield, Period 2, Classroom 20
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'US History'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield'),
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'US History'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield'),
 	'2024-09-01', 
 	'2025-06-01', 
 	2, 
 	20
 ),
 (	-- Freshman Spanish course taught by Valentina Murphy, Period 7, Classroom 14
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Spanish' and `gradeLevelID` = (SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Freshman')), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Valentina' and `lName` = 'Murphy'),
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Spanish' and `gradeLevelID` = (SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Freshman')), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Valentina' and `lName` = 'Murphy'),
 	'2024-09-01', 
 	'2025-06-01', 
 	7, 
 	14
 ),
 (	-- Junior Anatomy and Physiology course taught by Tom Rossi, Period 3, Classroom 18
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Anatomy and Physiology'), 
-	(SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Tom' and `lName` = 'Rossi'),
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Anatomy and Physiology'), 
+	(SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Tom' and `lName` = 'Rossi'),
 	'2024-09-01', 
 	'2025-06-01', 
 	3, 
 	18
 ),
 ( -- Freshman English with no Teacher selected yet, Period 10, Classroom 50
-	(SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English'),
+	(SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English'),
 	NULL,
 	'2024-09-01',
 	'2025-06-01',
@@ -347,137 +347,137 @@ VALUES ( -- Freshman English with Kate Jones, Period 9, Classroom 77
 ;
 
 -- Enrollments
-INSERT INTO `BHS_Class_Enrollments`.`Enrollments`
+INSERT INTO `cs340_schrecon`.`Enrollments`
 (`studentID`, `classSectionID`,`enrolledDate`) 
 VALUES
  ( -- Molly Brown in Freshman English class section taught by Kate Jones
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Molly' and `lName` = 'Brown'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-	`courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English')
-	and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Molly' and `lName` = 'Brown'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+	`courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English')
+	and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
 	'2024-08-10'
 ), 
 ( -- Priyanka Patel in US History class section taught by Sandra Springfield
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Priyanka' and `lName` = 'Patel'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'US History')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield')),
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Priyanka' and `lName` = 'Patel'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'US History')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield')),
     '2024-08-01'
 ),
 (
 	-- Priyanka Patel in Drivers ED class section taught by Dave Kim
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Priyanka' and `lName` = 'Patel'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = "Driver's Ed")
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Priyanka' and `lName` = 'Patel'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = "Driver's Ed")
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim')), 
 	'2023-08-10'
 ),
 (	-- Rahul Patel in Drivers Ed class section taugth by Date Kim
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Rahul' and `lName` = 'Patel'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = "Driver's Ed")
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Rahul' and `lName` = 'Patel'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = "Driver's Ed")
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Dave' and `lName` = 'Kim')), 
 	'2023-08-10'
 ),
 (	-- Paul Paulson in English class section taught by Kate Jones
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Paul' and `lName` = 'Paulson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-	`courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English') 
-	and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Paul' and `lName` = 'Paulson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+	`courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English') 
+	and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
 	'2024-08-10'
 ),
 (	-- John Johnson in English class section taught by Kate Jones
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'John' and `lName` = 'Johnson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-	`courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English') 
-	and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'John' and `lName` = 'Johnson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+	`courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English') 
+	and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
 	'2024-08-10'
 ), 
 (	-- Robert Robertson in AP Calc class section taught by Ruth Rosenberg
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Robert' and `lName` = 'Robertson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Robert' and `lName` = 'Robertson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
     and `period` = 3), -- for teachers who teach more than one period, the classSection sbuquery needs to include period and/or classroom
 	'2024-08-10'
 ), 
 (	-- Howard Howardson in AP Calc class section taught by Ruth Rosenberg
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Howard' and `lName` = 'Howardson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Howard' and `lName` = 'Howardson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
     and `period` = 9), 
 	'2024-08-10'
 ),
 (	-- Olaf Olafson in Freshman English class section taught by Kate Jones
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Olaf' and `lName` = 'Olafson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-	`courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'English') 
-	and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Olaf' and `lName` = 'Olafson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+	`courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'English') 
+	and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Kate' and `lName` = 'Jones')), 
 	'2024-08-10'
 ), 
 (	-- Fredrick Fredrickson in AP Calc class section taught by Ruth Rosenberg
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Fredrick' and `lName` = 'Fredrickson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Fredrick' and `lName` = 'Fredrickson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Ruth' and `lName` = 'Rosenberg')
     and `period` = 9), 
 	'2024-08-10'
 ),
 (-- Adam Armstrong in Geometry class section taught by Brandon Lynn
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Adam' and `lName` = 'Armstrong'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Geometry')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Adam' and `lName` = 'Armstrong'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Geometry')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
 	'2024-08-10'
 ),
 (-- Erik Erikson in Geometry class section taught by Brandon Lynn
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Erik' and `lName` = 'Erikson'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Geometry')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Erik' and `lName` = 'Erikson'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Geometry')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
 	'2024-08-10'
 ),
 ( -- Sarah Smith in Geometry class section taught by Brandon Lynn
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Sarah' and `lName` = 'Smith'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Geometry')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Sarah' and `lName` = 'Smith'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Geometry')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
 	'2024-08-10'
 ),
 ( -- Hideo Kojima in Geometry class section taught by Brandon Lynn
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Hideo' and `lName` = 'Kojima'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Geometry')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Hideo' and `lName` = 'Kojima'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Geometry')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
 	'2024-08-10'
 ),
 ( -- Paul Atreides in US History class section taught by Sandra Springfield
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Paul' and `lName` = 'Atreides'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'US History')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Paul' and `lName` = 'Atreides'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'US History')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Sandra' and `lName` = 'Springfield')), 
 	'2024-08-10'
 ),
 ( -- Ximena Cuaron in AP Calc class section taught by Brandon Lynn
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Ximena' and `lName` = 'Cuaron'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'AP Calculus')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Ximena' and `lName` = 'Cuaron'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'AP Calculus')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Brandon' and `lName` = 'Lynn')), 
 	'2024-08-10'
 ),
 (-- Rahul Patel in Anatomy and Physiology class section taught by Tom Rossi
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Rahul' and `lName` = 'Patel'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Anatomy and Physiology')
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Tom' and `lName` = 'Rossi')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Rahul' and `lName` = 'Patel'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Anatomy and Physiology')
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Tom' and `lName` = 'Rossi')), 
 	'2024-08-10'
 ),
 (-- Molly Brown in Spanish class section taught by Valentina Murphy
-	(SELECT `studentID` from `BHS_Class_Enrollments`.`Students` where `fName` = 'Molly' and `lName` = 'Brown'),
-	(SELECT `classSectionID` from `BHS_Class_Enrollments`.`ClassSections` where 
-    `courseID` = (SELECT `courseID` from `BHS_Class_Enrollments`.`Courses` where `name` = 'Spanish' and `gradeLevelID` = (SELECT `gradeLevelID` from `BHS_Class_Enrollments`.`GradeLevels` where `gradeName` = 'Freshman'))
-    and `teacherID` = (SELECT `teacherID` from `BHS_Class_Enrollments`.`Teachers` where `fName` = 'Valentina' and `lName` = 'Murphy')), 
+	(SELECT `studentID` from `cs340_schrecon`.`Students` where `fName` = 'Molly' and `lName` = 'Brown'),
+	(SELECT `classSectionID` from `cs340_schrecon`.`ClassSections` where 
+    `courseID` = (SELECT `courseID` from `cs340_schrecon`.`Courses` where `name` = 'Spanish' and `gradeLevelID` = (SELECT `gradeLevelID` from `cs340_schrecon`.`GradeLevels` where `gradeName` = 'Freshman'))
+    and `teacherID` = (SELECT `teacherID` from `cs340_schrecon`.`Teachers` where `fName` = 'Valentina' and `lName` = 'Murphy')), 
 	'2024-08-10'
 )
 ;

@@ -19,7 +19,7 @@ def root():
     return render_template("index.j2")
 
 
-@app.route("/students", methods=["POST", "GET"])
+@app.route("/students.j2", methods=["POST", "GET"])
 def students():
     """Route CRUD methods to the Students Entity Page"""
 
