@@ -6,10 +6,10 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # Set the variables in our application with those environment variables
-host = "localhost" # os.environ.get("340DBHOST") # replace with your database URL
-user = "schrecon" # os.environ.get("340DBUSER") # replace with your database username
-passwd = os.environ.get("localMySQLAdmin") # replace with your database password
-db = "bhs_class_enrollments" # os.environ.get("340DB")
+host = "" # os.environ.get("340DBHOST") # replace with your database URL
+user = "" # os.environ.get("340DBUSER") # replace with your database username
+passwd = "" # replace with your database password
+db = "" # os.environ.get("340DB")
 
 def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     '''
