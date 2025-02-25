@@ -4,6 +4,23 @@ from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request
 from read_sql_file import read_sql_file
+import logging
+import time
+
+# store current run date for logging files
+run_date_log = time.strftime('%Y-%m-%d-%H:%M')
+
+log_filename = fr'program_logs\run_log_app_{run_date_log}.txt'
+
+# Configure logging to output to both console and a file
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_filename),
+        logging.StreamHandler()
+    ]
+)
 
 app = Flask(__name__)
 
@@ -27,6 +44,7 @@ def students():
 
     cursor = db.execute_query(db_connection=db_connection, query=students_query)
     results = cursor.fetchall()
+    logging.info(f"Results: {results}")
     return render_template("students.j2", students=results)
 
 # Listener
