@@ -6,9 +6,9 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # Set the variables in our application with those environment variables
-host = "localhost" # os.environ.get("340DBHOST")
-user = "schrecon" # os.environ.get("340DBUSER")
-passwd = os.environ.get("localMySQLAdmin")
+host = "localhost" # os.environ.get("340DBHOST") # replace with your database URL
+user = "schrecon" # os.environ.get("340DBUSER") # replace with your database username
+passwd = os.environ.get("localMySQLAdmin") # replace with your database password
 db = "bhs_class_enrollments" # os.environ.get("340DB")
 
 def connect_to_database(host = host, user = user, passwd = passwd, db = db):
@@ -58,7 +58,7 @@ def execute_query(db_connection = None, query = None, query_params = ()):
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")
     db = connect_to_database()
-    query = "SELECT * from bsg_people;"
+    query = "SELECT * from students;"
     results = execute_query(db, query);
     print(f"Printing results of {query}")
 
