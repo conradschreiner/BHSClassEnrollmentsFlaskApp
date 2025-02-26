@@ -8,14 +8,13 @@ FROM `GradeLevels` gl
 ORDER BY gl.gradeLevelID;
 
 -- Students webpage table query that we plan to use for student page to show grade level foreign key join
-SELECT s.studentID, s.lName AS "Last Name", s.fName AS "First Name", s.birthdate AS "Birthdate", s.gradeLevelID,
-       gl.gradeName AS "Grade Level", gl.gradeName AS "Grade Name"
+SELECT s.studentID, s.lName AS "Last Name", s.fName AS "First Name", s.birthdate AS "Birthdate", s.gradeLevelID, gl.gradeName AS "Grade Name"
 FROM `Students` s
          INNER JOIN `GradeLevels` gl ON  s.gradeLevelID = gl.gradelevelID
 ORDER BY s.studentID; -- going to go with order by PK for now on every table query
 
--- Teachers webpage table Query - note that a 1 means currently employed, and a 0 means not currently employed (retired, on leave, laid off, etc.)
-SELECT t.teacherID, t.fName AS "First Name", t.lName AS "Last Name", t.isCurrentlyEmployed AS "Employment Status"
+-- Teachers webpage table Query 
+SELECT t.teacherID, t.fName AS "First Name", t.lName AS "Last Name"
 FROM `Teachers` t
 ORDER BY t.teacherID;
 
@@ -25,7 +24,7 @@ FROM `Departments` d
 ORDER BY d.departmentID;
 
 -- Courses webpage table Query - includes foreign key joins on departments and gradelevels for user visibility
-SELECT c.courseID, c.name as "Course Name", c.isCurrentlyOffered AS "Currently Offered Course", c.gradeLevelID,
+SELECT c.courseID, c.name as "Course Name", c.gradeLevelID,
        gl.gradeName AS "Grade Level Name", gl.gradeNumber AS "Grade Level Number", d.departmentID,
        d.subjectArea AS "Department Subject Area"
 FROM `Courses` c
@@ -38,8 +37,7 @@ ORDER BY c.courseID;
 SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
        cs.period AS "Period", cs.classroom as "Classroom", c.courseID, c.name as "Course Name",
-       t.teacherID, CONCAT(t.fName, ' ', t.lName) AS "Teacher Name",
-       t.isCurrentlyEmployed AS "Teacher Employment Status" -- including to better understand the NULLable foreign key
+       t.teacherID, CONCAT(t.fName, ' ', t.lName) AS "Teacher Name"
 FROM `ClassSections` cs
 INNER JOIN `Courses` c on cs.courseID = c.courseID
 LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID -- to account for NULL and/or "NULLed" Teachers
@@ -85,12 +83,11 @@ SELECT gradeName -- :gradeNumber options
     FROM gradelevels;
 
 -- Teachers
-INSERT INTO `Teachers` (fName, lName, birthdate, isCurrentlyEmployed)
+INSERT INTO `Teachers` (fName, lName, birthdate)
 VALUES (
         :fNameInput, -- text box input
         :lNameInput, -- text box input
-        :birthdateInput, -- date select input
-        :isCurrentlyEmployedInput -- boolean value that will be provided to the user  - will see True or False - database will insert 1 for True 0 for False
+        :birthdateInput -- date select input
        );
 
 -- department
@@ -100,12 +97,11 @@ VALUES (
        );
 
 -- Courses
-INSERT INTO `Courses` (gradeLevelID, name, departmentID, isCurrentlyOffered)
+INSERT INTO `Courses` (gradeLevelID, name, departmentID)
 VALUES (
         (SELECT gradeLevelID FROM `GradeLevels` WHERE gradeNumber = :gradeNumber),
         :nameInput, -- text box input
-        (SELECT departmentID FROM `Departments` WHERE subjectArea = :subjectArea),
-        :isCurrentlyOffered -- Boolean value user will have two options on static drop down - user will see True or False - database will insert 1 for True 0 for False
+        (SELECT departmentID FROM `Departments` WHERE subjectArea = :subjectArea)
        );
 
 -- select gradeNames for gradeLevelID FK dropdown
