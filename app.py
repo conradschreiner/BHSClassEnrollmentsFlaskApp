@@ -1,3 +1,5 @@
+import MySQLdb
+
 import database.db_connector as db
 import os
 from flask import Flask, render_template, json, redirect
@@ -24,11 +26,11 @@ def root():
     return render_template("index.j2")
 
 
-@app.route("/students", methods=["POST", "GET"])
+@app.route("/students", methods=["GET"])
 def students():
-    """Route CRUD methods to the Students Entity Page"""
+    """Route for Read functionality of Students Entity Page"""
 
-    # load queries from file and store as string variable
+    # load read queries from file and store as string variable
     students_query = read_sql_file(r"database/sql_storage/select_all_students.sql")
     grade_levels_query = read_sql_file(r"database/sql_storage/select_gradelevel_names.sql")
 
@@ -40,6 +42,12 @@ def students():
     cursor_grade_levels = db.execute_query(db_connection=db_connection, query=grade_levels_query)
     results_grade_levels = cursor_grade_levels.fetchall()
 
+    # generate jinja template
+    return render_template("students.j2", students=results_table, grade_levels=results_grade_levels)
+
+@app.route('/students/create', methods=["POST"])
+def add_student():
+    """Creates a new student record in the database."""
     # add student insert functionality
     if request.method == "POST" and request.form.get("add_student"):
         first_name = request.form["fName"]
@@ -48,19 +56,16 @@ def students():
         gradelevel = request.form["gradelevel"]
 
         # generate query and prep cursor
-        insert_sql = f"INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES ({gradelevel}, {first_name}, {last_name}, {birtdate});"
-        cursor_insert = db.execute_query(db_connection=db_connection, query=insert_sql)
+        insert_sql = "INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES (?, ?, ?, ?);" # formatting used on Flask documentation https://flask.palletsprojects.com/en/stable/tutorial/blog/
+        cursor_insert = mysql.connection.cursor()
 
         # execute query
-        cursor_insert.execute(insert_sql)
+        cursor_insert.execute(insert_sql, (gradelevel, first_name, last_name, birtdate))
 
         # commit the insert
         mysql.connection.commit()
 
         return redirect("/students")
-
-    # generate jinja template
-    return render_template("students.j2", students=results_table, grade_levels=results_grade_levels)
 
 @app.route("/gradelevels", methods=["POST", "GET"])
 def gradelevels():
