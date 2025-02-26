@@ -158,9 +158,24 @@ section {
       background-color: var(--navBack);
   }
     legend {}
-  label {}
-  button {}
-  input {}
+  label {
+      padding: 0.5%;
+      display: inline-block;
+  }
+  button {
+      color: var(--black);
+      background-color: var(--white);
+       border: 1px solid var(--orange);
+    padding: 0.5%;
+      transition: background-color 0.3s, color 0.3s; /* ensure smooth transition when user hovers over buttons*/
+  }
+  button:hover {
+      color: var(--orange);
+      background-color: var(--dark);
+  }
+  input {
+      display: inline-block;
+  }
   select {}
     optgroup {}
     option {}
