@@ -91,6 +91,18 @@ def classsections():
     results = cursor.fetchall()
     return render_template("classsections.j2", classsections=results)
 
+@app.route("/enrollments.j2", methods=["POST", "GET"])
+def enrollments():
+    """Route CRUD methods to the Enrollments Entity Page"""
+
+    # load query from file and store as string variable
+    enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
+
+    # run query and generate jinja template
+    cursor = db.execute_query(db_connection=db_connection, query=enrollments_query)
+    results = cursor.fetchall()
+    return render_template("enrollments.j2", enrollments=results)
+
 
 # Listener
 if __name__ == "__main__":
