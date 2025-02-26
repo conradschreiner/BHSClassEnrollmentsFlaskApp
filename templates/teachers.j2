@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" media="screen" href="static/css/main.css" />
+    <title>Teachers</title>
+  </head>
+  <body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="teachers.j2">teachers</a>
+        <a href="students.j2">Students</a>
+        <a href="teachers.j2">Teachers</a>
+        <a href="Departments.j2">Departments</a>
+        <a href="Courses.j2">Courses</a>
+        <a href="ClassSections.j2">ClassSections</a>
+        <a href="Enrollments.j2">Enrollments</a>
+    </nav>
+    <section>
+    <h1>Teachers Table</h1>
+    <table border="1" cellpadding="5" style="border-collapse:collapse">
+      <tr>
+        <!-- Iterate through each key in the first entry to get the
+        column name -->
+        {% for key in teachers[0].keys() %}
+
+        <!-- Create a <th> tag with the key inside of it, this will be
+        our header row -->
+        <th>{{ key }}</th>
+
+        <!-- End of this for loop -->
+        {% endfor %}
+      </tr>
+    {% for teacher in teachers %}
+      <tr>
+ <!-- Then iterate through every key in the current person dictionary -->
+        {% for key in teacher.keys() %}
+        <td>{{teacher[key]}}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </table>
+    <form>
+      <fieldset>
+        <legend><strong>Add a Teacher</strong></legend>
+        <label for="fName">First Name</label>
+        <input id="fName" name="fName" type="text" required />
+        <label for="lName">Last Name</label>
+        <input name="lName" id="lName" type="text" required />
+        <label for="birthdate">Birthdate</label>
+        <input name="birthdate" id="birthdate" type="date" required />
+        <label for="addteacher">
+          <button type="submit" id="addteacher">Add Teacher</button>
+        </label>
+      </fieldset>
+    </form>
+      </section>
+  </body>
+</html>
