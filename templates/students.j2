@@ -67,12 +67,12 @@
         type="date"
         required
       />
-      <label for="grade" >Grade</label>
-      <select name="grade" id="grade">
-        <option value="1">Freshman</option>
-        <option value="2">Sophomore</option>
-        <option value="3">Junior</option>
-        <option value="4">Senior</option>
+      <label for="gradeLevel" >Grade Name: </label>
+      <select name="gradeLevel" id="gradeLevel">
+            <option value="0">--Select from available Grade Levels--</option>
+            {% for grade in grade_levels %}
+                <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+            {% endfor %}
       </select>
       <label for="addstudent">
         <button type="submit" id="addstudent">Add Student</button>
