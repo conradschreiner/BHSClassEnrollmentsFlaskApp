@@ -48,7 +48,7 @@ def students():
         gradelevel = request.form["gradelevel"]
 
         # generate query and prep cursor
-        insert_sql = f"INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES ({gradelevel}, {first_name},, {last_name}, {birtdate});"
+        insert_sql = f"INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES ({gradelevel}, {first_name}, {last_name}, {birtdate});"
         cursor_insert = db.execute_query(db_connection=db_connection, query=insert_sql)
 
         # execute query
