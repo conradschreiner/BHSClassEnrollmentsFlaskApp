@@ -4,8 +4,13 @@ from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
 from flask import request
 from read_sql_file import read_sql_file
+import logging
 
 app = Flask(__name__)
+
+# set logger to debug mode for testing purposes messages
+logging.basicConfig(level=logging.DEBUG)
+
 
 mysql = MySQL(app)
 
@@ -19,7 +24,7 @@ def root():
     return render_template("index.j2")
 
 
-@app.route("/students.j2", methods=["POST", "GET"])
+@app.route("/students", methods=["POST", "GET"])
 def students():
     """Route CRUD methods to the Students Entity Page"""
 
@@ -35,10 +40,29 @@ def students():
     cursor_grade_levels = db.execute_query(db_connection=db_connection, query=grade_levels_query)
     results_grade_levels = cursor_grade_levels.fetchall()
 
+    # add student insert functionality
+    if request.method == "POST" and request.form.get("add_student"):
+        first_name = request.form["fName"]
+        last_name = request.form["lName"]
+        birtdate = request.form["birthdate"]
+        gradelevel = request.form["gradelevel"]
+
+        # generate query and prep cursor
+        insert_sql = f"INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES ({gradelevel}, {first_name},, {last_name}, {birtdate});"
+        cursor_insert = db.execute_query(db_connection=db_connection, query=insert_sql)
+
+        # execute query
+        cursor_insert.execute(insert_sql)
+
+        # commit the insert
+        mysql.connection.commit()
+
+        return redirect("/students")
+
     # generate jinja template
     return render_template("students.j2", students=results_table, grade_levels=results_grade_levels)
 
-@app.route("/gradelevels.j2", methods=["POST", "GET"])
+@app.route("/gradelevels", methods=["POST", "GET"])
 def gradelevels():
     """Route CRUD methods to the GradeLevels Entity Page"""
 
@@ -50,7 +74,7 @@ def gradelevels():
     results = cursor.fetchall()
     return render_template("gradelevels.j2", gradelevels=results)
 
-@app.route("/teachers.j2", methods=["POST", "GET"])
+@app.route("/teachers", methods=["POST", "GET"])
 def teachers():
     """Route CRUD methods to the Teachers Entity Page"""
 
@@ -62,7 +86,7 @@ def teachers():
     results = cursor.fetchall()
     return render_template("teachers.j2", teachers=results)
 
-@app.route("/departments.j2", methods=["POST", "GET"])
+@app.route("/departments", methods=["POST", "GET"])
 def departments():
     """Route CRUD methods to the Departments Entity Page"""
 
@@ -74,7 +98,7 @@ def departments():
     results = cursor.fetchall()
     return render_template("departments.j2", departments=results)
 
-@app.route("/courses.j2", methods=["POST", "GET"])
+@app.route("/courses", methods=["POST", "GET"])
 def courses():
     """Route CRUD methods to the Courses Entity Page"""
 
@@ -86,7 +110,7 @@ def courses():
     results = cursor.fetchall()
     return render_template("courses.j2", courses=results)
 
-@app.route("/classsections.j2", methods=["POST", "GET"])
+@app.route("/classsections", methods=["POST", "GET"])
 def classsections():
     """Route CRUD methods to the ClassSections Entity Page"""
 
@@ -98,7 +122,7 @@ def classsections():
     results = cursor.fetchall()
     return render_template("classsections.j2", classsections=results)
 
-@app.route("/enrollments.j2", methods=["POST", "GET"])
+@app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
     """Route CRUD methods to the Enrollments Entity Page"""
 

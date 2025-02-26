@@ -9,13 +9,13 @@
   <body>
 <nav>
     <a href="/">Home</a>
-    <a href="gradelevels.j2">GradeLevels</a>
-    <a href="students.j2">Students</a>
-    <a href="teachers.j2">Teachers</a>
-    <a href="departments.j2">Departments</a>
-    <a href="courses.j2">Courses</a>
-    <a href="classsections.j2">ClassSections</a>
-    <a href="enrollments.j2">Enrollments</a>
+    <a href="/gradelevels">GradeLevels</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/departments">Departments</a>
+    <a href="/course">Courses</a>
+    <a href="/classsections">ClassSections</a>
+    <a href="/enrollments">Enrollments</a>
 </nav>
 <section>
     <h1>Students Table</h1>
@@ -38,11 +38,13 @@
         {% for key in student.keys() %}
         <td>{{student[key]}}</td>
         {% endfor %}
-          <td><button type='button' onclick="delete_student('studentID')" >remove</button></td>
+          <td>
+              <button type='button' onclick="delete_student('studentID')" >remove</button>
+          </td>
       </tr>
     {% endfor %}
     </table>
-  <form action="students.j2" method="POST">
+  <form name="add_student" action="/students" method="POST">
       <fieldset>
         <legend><strong>Add a Student</strong></legend>
       <tr>
@@ -81,7 +83,7 @@
             {% endfor %}
       </select>
       </label>
-        <button type="submit" id="addstudent">Add Student</button>
+        <button type="submit" id="add_student">Add Student</button>
       </fieldset>
   </form>
   </section>
