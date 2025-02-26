@@ -7,17 +7,11 @@ import time
 # check user
 user_id = input("Enter your ID: ")
 
-# store current run date for logging files
-run_date_log = time.strftime('%Y-%m-%d-%H:%M')
-
-log_filename = fr'program_logs\run_log_db_connector_{run_date_log}.txt'
-
 # Configure logging to output to both console and a file
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(log_filename),
         logging.StreamHandler()
     ]
 )
