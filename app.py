@@ -67,6 +67,18 @@ def departments():
     results = cursor.fetchall()
     return render_template("departments.j2", departments=results)
 
+@app.route("/courses.j2", methods=["POST", "GET"])
+def courses():
+    """Route CRUD methods to the Courses Entity Page"""
+
+    # load query from file and store as string variable
+    courses_query = read_sql_file(r"database/sql_storage/select_all_courses.sql")
+
+    # run query and generate jinja template
+    cursor = db.execute_query(db_connection=db_connection, query=courses_query)
+    results = cursor.fetchall()
+    return render_template("courses.j2", courses=results)
+
 
 # Listener
 if __name__ == "__main__":
