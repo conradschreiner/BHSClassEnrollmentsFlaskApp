@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" media="screen" href="static/css/main.css" />
+    <title>ClassSections</title>
+  </head>
+  <body>
+    <nav>
+    <a href="/">Home</a>
+    <a href="departments.j2">departments</a>
+    <a href="departments.j2">departments</a>
+    <a href="teachers.j2">Teachers</a>
+    <a href="departments.j2">Departments</a>
+    <a href="courses.j2">Courses</a>
+    <a href="classsections.j2">ClassSections</a>
+    <a href="enrollments.j2">Enrollments</a>
+    </nav>
+    <section>
+    <h1>ClassSections Table</h1>
+<table border="1" cellpadding="5" style="border-collapse:collapse">
+      <tr>
+        <!-- Iterate through each key in the first entry to get the
+        column name -->
+        {% for key in classsections[0].keys() %}
+
+        <!-- Create a <th> tag with the key inside of it, this will be
+        our header row -->
+        <th>{{ key }}</th>
+
+        <!-- End of this for loop -->
+        {% endfor %}
+      </tr>
+    {% for classsection in classsections %}
+      <tr>
+ <!-- Then iterate through every key in the current person dictionary -->
+        {% for key in classsection.keys() %}
+        <td>{{classsection[key]}}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </table>
+    <form>
+      <fieldset>
+        <legend><strong>Add ClassSection Record</strong></legend>
+        <div>
+          <label for="course">Course: </label>
+          <select name="course" id="course">
+            <option value="0">--Available Courses--</option>
+            <option value="1">English</option>
+            <option value="2">Sophomore</option>
+            <option value="3">AP Calculus</option>
+            <option value="4">Geometry</option>
+            <option value="5">Driver's Ed</option>
+            <option value="6">US History</option>
+          </select>
+        </div>
+        <div>
+          <label for="teacher">Teacher: </label>
+          <select name="teacher" id="teacher">
+            <option value="0">--Available Teachers--</option>
+            <option value="1">Kate Jones</option>
+            <option value="2">Brandon Lynn</option>
+            <option value="3">Ruth Rosenberg</option>
+            <option value="4">Brandon Lynn</option>
+            <option value="5">Dave Kim</option>
+            <option value="6">Sandra Springfield</option>
+          </select>
+        </div>
+        <div>
+          <label for="period">Period Number: </label>
+          <input type="number" id="period" name="period" />
+        </div>
+        <div>
+          <label for="classroom">Classroom Number: </label>
+          <input type="number" id="classroom" name="classroom" />
+        </div>
+        <div>
+          <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" name="classroom" />
+        </div>
+        <div>
+          <label for="endDate">End Date</label>
+          <input type="date" id="endDate" name="classroom" />
+        </div>
+        <label for="addClass">
+          <button type="submit" id="addClass">Add ClassSection</button>
+        </label>
+      </fieldset>
+    </form>
+      </section>
+  </body>
+</html>
