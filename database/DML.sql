@@ -72,15 +72,15 @@ VALUES (
 INSERT INTO `Students`
 (`gradeLevelID`, `fName`, `lName`, `birthdate`) -- for gradeLevel, user will only be able to from available GradeLevel.gradeName(s)
 VALUES (
-        (SELECT `gradeLevelID` FROM `GradeLevels` WHERE `gradeNumber` = :gradeNumber),
+        :gradeLevelID, -- obtained from dynamic dropdown
         :fNameInput,  -- text box iput
         :lNameInput, -- text box input
         :birthdateInput -- date select input
 );
 
--- use for grade dropdown on insert
-SELECT gradeName -- :gradeNumber options
-    FROM gradelevels;
+-- select gradeNames for gradeLevelID FK dropdown - only the gradeName is displayed. The ID is used behind the scenes for the <options> values.
+SELECT gradeLevelID, gradeName -- This also allows for the FK to be used directly in the INSERT instead of a subquery
+    FROM `GradeLevels`;
 
 -- Teachers
 INSERT INTO `Teachers` (fName, lName, birthdate)
@@ -104,9 +104,9 @@ VALUES (
         (SELECT departmentID FROM `Departments` WHERE subjectArea = :subjectArea)
        );
 
--- select gradeNames for gradeLevelID FK dropdown
-SELECT gradeName -- :gradeNumber options
-    FROM gradelevels;
+-- select gradeNames for gradeLevelID FK dropdown - only the gradeName is displayed. The ID is used behind the scenes for the <options> values.
+SELECT gradeLevelID, gradeName -- This also allows for the FK to be used directly in the INSERT instead of a subquery
+    FROM `GradeLevels`;
 
 -- select subjectAreas for departmentID FK dropdown
 SELECT subjectArea -- :subjectArea options
