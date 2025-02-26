@@ -23,13 +23,20 @@ def root():
 def students():
     """Route CRUD methods to the Students Entity Page"""
 
-    # load query from file and store as string variable
+    # load queries from file and store as string variable
     students_query = read_sql_file(r"database/sql_storage/select_all_students.sql")
+    grade_levels_query = read_sql_file(r"database/sql_storage/select_gradelevel_names.sql")
 
-    # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=students_query)
-    results = cursor.fetchall()
-    return render_template("students.j2", students=results)
+    # run table query and fetch results
+    cursor_table = db.execute_query(db_connection=db_connection, query=students_query)
+    results_table = cursor_table.fetchall()
+
+    # pull available grade level names
+    cursor_grade_levels = db.execute_query(db_connection=db_connection, query=grade_levels_query)
+    results_grade_levels = cursor_grade_levels.fetchall()
+
+    # generate jinja template
+    return render_template("students.j2", students=results_table, grade_levels=results_grade_levels)
 
 @app.route("/gradelevels.j2", methods=["POST", "GET"])
 def gradelevels():
