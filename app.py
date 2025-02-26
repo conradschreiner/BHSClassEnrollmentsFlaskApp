@@ -50,8 +50,8 @@ def students():
 # Listener
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
-    # app.run(port=3306, debug=True)
-    port = int(os.environ.get('PORT', 3306))
+    #app.run(port=50005, debug=True)
+    port = int(os.environ.get('PORT', 50005))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
