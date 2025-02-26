@@ -19,19 +19,12 @@ logging.basicConfig(
 # Load our environment variables from the .env file in the root of our project.
 load_dotenv(find_dotenv())
 
-# if user_id == "schrecon":
+
 # Set the variables in our application with those environment variables
 host = os.environ.get("340DBHOST") # replace with your database URL
 user = os.environ.get("340DBUSER") # replace with your database username
 passwd = os.environ.get("340DBPW") # replace with your database password
 db = os.environ.get("340DB")
-# elif user_id == 'schwarir':
-#     host = "classmysql.engr.oregonstate.edu"
-#     user = "cs340_schwarir"
-#     passwd = "<PASSWORD>"
-#     db = "cs340_schwarir"
-# else:
-#     logging.error(f"User {user_id} not found.")
 
 def connect_to_database(db_host = host, db_user = user, db_passwd = passwd, schema = db):
     '''
