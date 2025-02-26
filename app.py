@@ -33,7 +33,7 @@ def students():
 
 @app.route("/gradelevels.j2", methods=["POST", "GET"])
 def gradelevels():
-    """Route CRUD methods to the GradeLevel Entity Page"""
+    """Route CRUD methods to the GradeLevels Entity Page"""
 
     # load query from file and store as string variable
     gradelevels_query = read_sql_file(r"database/sql_storage/select_all_gradelevels.sql")
@@ -43,13 +43,26 @@ def gradelevels():
     results = cursor.fetchall()
     return render_template("gradelevels.j2", gradelevels=results)
 
+@app.route("/teachers.j2", methods=["POST", "GET"])
+def teachers():
+    """Route CRUD methods to the Teachers Entity Page"""
+
+    # load query from file and store as string variable
+    teachers_query = read_sql_file(r"database/sql_storage/select_all_teachers.sql")
+
+    # run query and generate jinja template
+    cursor = db.execute_query(db_connection=db_connection, query=teachers_query)
+    results = cursor.fetchall()
+    return render_template("teachers.j2", teachers=results)
+
 
 # Listener
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
-    # app.run(port=3306, debug=True)
+
     port = int(os.environ.get('PORT', 3306))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
-    app.run(port=port)
+    app.run(port=3306, debug=True)
+    # app.run(port=port)
