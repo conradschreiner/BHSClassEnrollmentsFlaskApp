@@ -42,41 +42,46 @@
       </tr>
     {% endfor %}
     </table>
-  <form>
+  <form action="students.j2" method="POST">
       <fieldset>
         <legend><strong>Add a Student</strong></legend>
-      <label for="lName">Last Name</label>
-      <input
+      <tr>
+      <label>Last Name:
+            <input
             name="lName"
             id="lName"
             type="text"
             required
           />
-      <label for="fName">First Name</label>
-      <input
+      </label>
+
+      <label>First Name:
+            <input
         id="fName"
         name="fName"
         type="text"
         required
       />
-      <label for="birthdate"
-        >Birthdate</label>
-      <input
+      </label>
+
+      <label
+        >Birthdate:
+            <input
         name="birthdate"
         id="birthdate"
         type="date"
         required
       />
-      <label for="gradeLevel" >Grade Name: </label>
-      <select name="gradeLevel" id="gradeLevel">
+      </label>
+      <label >Grade Name:
+            <select name="gradeLevel" id="gradeLevel">
             <option value="0">--Select from available Grade Levels--</option>
             {% for grade in grade_levels %}
                 <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
             {% endfor %}
       </select>
-      <label for="addstudent">
-        <button type="submit" id="addstudent">Add Student</button>
       </label>
+        <button type="submit" id="addstudent">Add Student</button>
       </fieldset>
   </form>
   </section>
