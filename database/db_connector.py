@@ -33,11 +33,11 @@ elif user_id == 'schwarir':
 else:
     logging.error(f"User {user_id} not found.")
 
-def connect_to_database(db_host = host, db_user = user, db_passwd = passwd, hostname = db):
+def connect_to_database(db_host = host, db_user = user, db_passwd = passwd, schema = db):
     '''
     connects to a database and returns a database objects
     '''
-    db_connection = MySQLdb.connect(db_host,db_user,db_passwd,hostname)
+    db_connection = MySQLdb.connect(db_host,db_user,db_passwd,schema)
     return db_connection
 
 def execute_query(db_connection = None, query = None, query_params = ()):
