@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet"  type="text/css" media="screen" href="static/css/main.css">
+    <title>Departments</title>
+</head>
+<body>
+<nav>
+    <a href="/">Home</a>
+    <a href="departments.j2">departments</a>
+    <a href="departments.j2">departments</a>
+    <a href="teachers.j2">Teachers</a>
+    <a href="departments.j2">Departments</a>
+    <a href="courses.j2">Courses</a>
+    <a href="classsections.j2">ClassSections</a>
+    <a href="enrollments.j2">Enrollments</a>
+</nav>
+<section>
+<h1>Departments Table</h1>
+<table border="1" cellpadding="5" style="border-collapse:collapse">
+      <tr>
+        <!-- Iterate through each key in the first entry to get the
+        column name -->
+        {% for key in departments[0].keys() %}
+
+        <!-- Create a <th> tag with the key inside of it, this will be
+        our header row -->
+        <th>{{ key }}</th>
+
+        <!-- End of this for loop -->
+        {% endfor %}
+      </tr>
+    {% for department in departments %}
+      <tr>
+ <!-- Then iterate through every key in the current person dictionary -->
+        {% for key in department.keys() %}
+        <td>{{department[key]}}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </table>
+<form>
+  <fieldset>
+    <legend><strong>Add Department Record</strong></legend>
+    <div>
+      <label for="subjectArea">Department Subject Area: </label>
+      <input type="text" id="subjectArea" name="subjectArea"/>
+    <label for="addDepartment">
+        <button type="submit" id="addDepartment">Add Department</button>
+      </label>
+  </fieldset>
+</form>
+    </section>
+</body>
+</html>
