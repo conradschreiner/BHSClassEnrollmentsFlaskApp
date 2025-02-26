@@ -179,7 +179,7 @@ VALUES
 INSERT INTO `cs340_schwarir`.`Teachers`
 (`fName`, `lName`, `birthdate`)
 VALUES ('Kate', 'Jones', '1980-03-19'), ('Brandon', 'Lynn', '1990-11-24'),
-    ('Dave', 'Kim', '1975-07-02', 1), ('Ruth', 'Rosenberg', '1980-12-31'),
+    ('Dave', 'Kim', '1975-07-02'), ('Ruth', 'Rosenberg', '1980-12-31'),
     ('Sandra', 'Springfield', '1981-11-12'), 
 		('Valentina', 'Murphy', '1985-05-01'),
 		('Tom', 'Rossi', '1968-10-15'),
