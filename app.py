@@ -26,7 +26,7 @@ def root():
     return render_template("index.j2")
 
 
-@app.route("/students", methods=["GET"])
+@app.route("/students", methods=["GET", "POST"])
 def students():
     """Route for Read functionality of Students Entity Page"""
 
@@ -55,12 +55,15 @@ def add_student():
         birtdate = request.form["birthdate"]
         gradelevel = request.form["gradelevel"]
 
-        # generate query and prep cursor
-        insert_sql = "INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES (?, ?, ?, ?);" # formatting used on Flask documentation https://flask.palletsprojects.com/en/stable/tutorial/blog/
+        # store sql, data and prep cursor - source: https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
+        insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
+                      "VALUES (%s, %s, %s, %s);")
+
+        user_data = (gradelevel, first_name, last_name, birtdate)
         cursor_insert = mysql.connection.cursor()
 
         # execute query
-        cursor_insert.execute(insert_sql, (gradelevel, first_name, last_name, birtdate))
+        cursor_insert.execute(insert_sql, user_data)
 
         # commit the insert
         mysql.connection.commit()
@@ -148,5 +151,5 @@ if __name__ == "__main__":
     #                                 ^^^^
     #              You can replace this number with any valid port
 
-    app.run(port=3306, debug=True)
-    # app.run(port=port)
+    app.run(port=port, debug=True)
+    #app.run(port=port)
