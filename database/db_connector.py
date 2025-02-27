@@ -4,9 +4,6 @@ from dotenv import load_dotenv, find_dotenv
 import logging
 import time
 
-# check user
-# user_id = input("Enter your ID: ")
-
 # Configure logging to output to both console and a file
 logging.basicConfig(
     level=logging.INFO,
