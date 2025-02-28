@@ -10,6 +10,12 @@ import logging
 
 app = Flask(__name__)
 
+app.config['MYSQL_HOST'] = os.environ.get("host") # replace with your database URL
+app.config['MYSQL_USER'] = os.environ.get("user") # replace with your database username
+app.config['MYSQL_PASSWORD'] = os.environ.get("passwd") # replace with your database password
+app.config['MYSQL_DB'] = os.environ.get("db")
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+
 # set logger to debug mode for testing purposes messages
 logging.basicConfig(level=logging.DEBUG)
 
