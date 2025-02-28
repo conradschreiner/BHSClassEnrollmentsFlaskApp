@@ -1,8 +1,7 @@
 import MySQLdb
-
 import database.db_connector as db
 import os
-from flask import Flask, render_template, json, redirect
+from flask import Flask, render_template, json, redirect, url_for
 from flask_mysqldb import MySQL
 from flask import request
 from read_sql_file import read_sql_file
@@ -10,14 +9,19 @@ import logging
 
 app = Flask(__name__)
 
+# configure app to our db
+app.config['MYSQL_HOST'] = os.environ.get("340DBHOST") # replace with your database URL
+app.config['MYSQL_USER'] = os.environ.get("340DBUSER") # replace with your database username
+app.config['MYSQL_PASSWORD'] = os.environ.get("340DBPW") # replace with your database password
+app.config['MYSQL_DB'] = os.environ.get("340DB")
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+
 # set logger to debug mode for testing purposes messages
 logging.basicConfig(level=logging.DEBUG)
-
 
 mysql = MySQL(app)
 
 db_connection = db.connect_to_database()
-
 
 # Routes
 @app.route('/')
@@ -60,15 +64,21 @@ def add_student():
                       "VALUES (%s, %s, %s, %s);")
 
         user_data = (gradelevel, first_name, last_name, birtdate)
-        cursor_insert = mysql.connection.cursor()
 
-        # execute query
-        cursor_insert.execute(insert_sql, user_data)
-
-        # commit the insert
-        mysql.connection.commit()
+        # execute and commit query then close connection
+        db.execute_query(insert_sql, user_data)
 
         return redirect("/students")
+
+@app.route("/students/delete/<int:id>")
+def delete_student(id):
+    delete_sql = "DELETE FROM `Students` WHERE studentID = %s;"
+    delete_cursor = mysql.connection.cursor()
+    delete_cursor.execute(delete_sql, (id,))
+    mysql.connection.commit()
+    delete_cursor.close()
+    return redirect("/students")
+
 
 @app.route("/gradelevels", methods=["POST", "GET"])
 def gradelevels():
