@@ -39,7 +39,9 @@
         <td>{{student[key]}}</td>
         {% endfor %}
           <td>
-              <button type='button' onclick="delete_student('studentID')" >remove</button>
+              <a href="/students/delete/{{student.studentID}}">
+                <button type='button'>remove</button>
+              </a>
           </td>
       </tr>
     {% endfor %}
@@ -79,7 +81,7 @@
             <select name="gradeLevel" id="gradeLevel">
             <option value="0">--Select from available Grade Levels--</option>
             {% for grade in grade_levels %}
-                <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+                <option value="{{grade.gradeLevelID}}">{{grade.gradeName}}</option>
             {% endfor %}
       </select>
       </label>
