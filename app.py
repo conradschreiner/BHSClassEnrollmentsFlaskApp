@@ -1,3 +1,8 @@
+# We borrowed heavily from the provided Flask Starter app: https://github.com/osu-cs340-ecampus/flask-starter-app
+# Citation for the following function: add_student()
+# Date: 2/28/2025
+# Source URL:  https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
+
 import MySQLdb
 import database.db_connector as db
 import os
@@ -59,7 +64,7 @@ def add_student():
         birtdate = request.form["birthdate"]
         gradelevel = request.form["gradelevel"]
 
-        # store sql, data and prep cursor - source: https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
+        # store sql, data and prep cursor
         insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
                       "VALUES (%s, %s, %s, %s);")
 
