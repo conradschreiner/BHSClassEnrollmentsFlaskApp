@@ -21,10 +21,10 @@ load_dotenv(find_dotenv())
 
 
 # Set the variables in our application with those environment variables
-host = os.environ.get("340DBHOST") # replace with your database URL
-user = os.environ.get("340DBUSER") # replace with your database username
-passwd = os.environ.get("340DBPW") # replace with your database password
-db = os.environ.get("340DB")
+host = os.environ.get("host") # replace with your database URL
+user = os.environ.get("user") # replace with your database username
+passwd = os.environ.get("passwd") # replace with your database password
+db = os.environ.get("db")
 
 def connect_to_database(db_host = host, db_user = user, db_passwd = passwd, schema = db):
     '''

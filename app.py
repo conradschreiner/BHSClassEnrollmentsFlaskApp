@@ -52,20 +52,28 @@ def add_student():
     if request.method == "POST" and request.form.get("add_student"):
         first_name = request.form["fName"]
         last_name = request.form["lName"]
-        birtdate = request.form["birthdate"]
+        birthdate = request.form["birthdate"]
         gradelevel = request.form["gradelevel"]
 
         # generate query and prep cursor
-        insert_sql = "INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES (?, ?, ?, ?);" # formatting used on Flask documentation https://flask.palletsprojects.com/en/stable/tutorial/blog/
+        insert_sql = "INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate) VALUES ({gradeLevel, first_name, last_name, birthdate}) VALUES (%s, %s, %s, %s)" # formatting used on Flask documentation https://flask.palletsprxojects.com/en/stable/tutorial/blog/
         cursor_insert = mysql.connection.cursor()
 
         # execute query
-        cursor_insert.execute(insert_sql, (gradelevel, first_name, last_name, birtdate))
+        cursor_insert.execute(insert_sql, (gradeLevel, first_name, last_name, birthdate))
 
         # commit the insert
         mysql.connection.commit()
 
         return redirect("/students")
+@app.route("/students/delete/<int:id>")
+def delete_student(id):
+    delete_sql = "DELETE FROM `Students` WHERE studentID = %s;"
+    delete_cursor = mysql.connection.cursor()
+    delete_cursor.execute(delete_sql, (id,))
+    mysql.connection.commit()
+    delete_cursor.close()
+    return redirect("/students")
 
 @app.route("/gradelevels", methods=["POST", "GET"])
 def gradelevels():
@@ -144,9 +152,9 @@ def enrollments():
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
 
-    port = int(os.environ.get('PORT', 3306))
+    port = int(os.environ.get('PORT', 6604))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
-    app.run(port=3306, debug=True)
+    app.run(port=6604, debug=True)
     # app.run(port=port)

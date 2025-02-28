@@ -1,0 +1,12 @@
+2025-02-25 21:32:34,964 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:50005
+2025-02-25 21:32:34,964 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-25 21:33:02,116 - INFO - 127.0.0.1 - - [25/Feb/2025 21:33:02] "GET / HTTP/1.1" 200 -
+2025-02-25 21:33:02,424 - INFO - 127.0.0.1 - - [25/Feb/2025 21:33:02] "GET /static/css/main.css HTTP/1.1" 200 -
+2025-02-25 21:33:03,646 - INFO - 127.0.0.1 - - [25/Feb/2025 21:33:03] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-02-25 21:34:43,523 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:43] "[33mGET /GradeLevels.j2 HTTP/1.1[0m" 404 -
+2025-02-25 21:34:47,261 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:47] "[33mGET /GradeLevels.j2 HTTP/1.1[0m" 404 -
+2025-02-25 21:34:50,558 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:50] "[33mGET /index.j2 HTTP/1.1[0m" 404 -
+2025-02-25 21:34:52,509 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:52] "[33mGET /Teachers.j2 HTTP/1.1[0m" 404 -
+2025-02-25 21:34:55,705 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:55] "[33mGET /ClassSections.j2 HTTP/1.1[0m" 404 -
+2025-02-25 21:34:58,101 - INFO - 127.0.0.1 - - [25/Feb/2025 21:34:58] "[33mGET /Enrollments.j2 HTTP/1.1[0m" 404 -

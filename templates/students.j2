@@ -39,7 +39,9 @@
         <td>{{student[key]}}</td>
         {% endfor %}
           <td>
-              <button type='button' onclick="delete_student('studentID')" >remove</button>
+              <a href="/students/delete/{{student.studentID}}">
+                <button type='button'>remove</button>
+              </a>
           </td>
       </tr>
     {% endfor %}
