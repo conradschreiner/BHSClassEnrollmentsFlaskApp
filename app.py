@@ -10,6 +10,7 @@ from flask import Flask, render_template, json, redirect, url_for
 from flask_mysqldb import MySQL
 from flask import request
 from read_sql_file import read_sql_file
+from contains_number import contains_number
 import logging
 
 app = Flask(__name__)
@@ -27,6 +28,18 @@ logging.basicConfig(level=logging.DEBUG)
 mysql = MySQL(app)
 
 db_connection = db.connect_to_database()
+
+# exceptions
+class NoNumberNameInput(Exception):
+    """Flagged if a user tries to enter numerical values on an insert in an invalid scenario.
+    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/"""
+    def __init__(self, message, error_code):
+        self.message = message
+        self.error_code = error_code
+        super().__init__(self.message, self.error_code)
+
+    def __str__(self):
+        return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
 # Routes
 @app.route('/')
@@ -71,6 +84,9 @@ def add_student():
             birthdate = request.form["birthdate"]
             gradelevel = request.form["gradeLevel"]
 
+            if contains_number(first_name) or contains_number(last_name):
+                raise NoNumberNameInput("Numerical characters not allowed in student first name or last name.", 400)
+
             # store sql, data and prep cursor
             insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
                           "VALUES (%s, %s, %s, %s);")
@@ -84,6 +100,10 @@ def add_student():
             cursor.close()
 
             return redirect("/students")
+
+        except NoNumberNameInput as e:
+            logging.error(f"Error adding student: {e}")
+            return str(e), e.error_code
 
         except Exception as e:
             logging.error(f"Error adding student: {e}")
