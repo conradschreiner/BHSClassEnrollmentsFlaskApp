@@ -82,7 +82,7 @@ def add_student():
             first_name = request.form["fName"]
             last_name = request.form["lName"]
             birthdate = request.form["birthdate"]
-            gradelevel = request.form["gradeLevel"]
+            grade_level = request.form["gradeLevel"]
 
             if contains_number(first_name) or contains_number(last_name):
                 raise NoNumberNameInput("Numerical characters not allowed in student first name or last name.", 400)
@@ -91,7 +91,7 @@ def add_student():
             insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
                           "VALUES (%s, %s, %s, %s);")
 
-            user_data = (gradelevel, first_name, last_name, birthdate)
+            user_data = (grade_level, first_name, last_name, birthdate)
 
             # execute and commit query then close connection
             cursor = mysql.connection.cursor()
