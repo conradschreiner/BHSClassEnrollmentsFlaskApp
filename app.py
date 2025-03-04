@@ -43,37 +43,52 @@ def students():
     students_query = read_sql_file(r"database/sql_storage/select_all_students.sql")
     grade_levels_query = read_sql_file(r"database/sql_storage/select_gradelevel_names.sql")
 
+    cursor = mysql.connection.cursor()
+
     # run table query and fetch results
-    cursor_table = db.execute_query(db_connection=db_connection, query=students_query)
-    results_table = cursor_table.fetchall()
+    cursor.execute(students_query)
+    results_table = cursor.fetchall()
 
     # pull available grade level names
-    cursor_grade_levels = db.execute_query(db_connection=db_connection, query=grade_levels_query)
-    results_grade_levels = cursor_grade_levels.fetchall()
+    cursor.execute(grade_levels_query)
+    results_gl_dropdown = cursor.fetchall()
 
-    # generate jinja template
-    return render_template("students.j2", students=results_table, grade_levels=results_grade_levels)
+    if results_table and results_gl_dropdown:
+        # generate jinja template with data populated from database
+        return render_template("students.j2", students=results_table, grade_levels=results_gl_dropdown)
+    else:
+        # display blank page with no data if the database has not been populated yet
+        return render_template("students_no_data.html")
 
 @app.route('/students/create', methods=["POST"])
 def add_student():
     """Creates a new student record in the database."""
     # add student insert functionality
-    if request.method == "POST" and request.form.get("add_student"):
-        first_name = request.form["fName"]
-        last_name = request.form["lName"]
-        birtdate = request.form["birthdate"]
-        gradelevel = request.form["gradelevel"]
+    if request.method == "POST":
+        try:
+            first_name = request.form["fName"]
+            last_name = request.form["lName"]
+            birthdate = request.form["birthdate"]
+            gradelevel = request.form["gradeLevel"]
 
-        # store sql, data and prep cursor
-        insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
-                      "VALUES (%s, %s, %s, %s);")
+            # store sql, data and prep cursor
+            insert_sql = ("INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)"
+                          "VALUES (%s, %s, %s, %s);")
 
-        user_data = (gradelevel, first_name, last_name, birtdate)
+            user_data = (gradelevel, first_name, last_name, birthdate)
 
-        # execute and commit query then close connection
-        db.execute_query(insert_sql, user_data)
+            # execute and commit query then close connection
+            cursor = mysql.connection.cursor()
+            cursor.execute(insert_sql, user_data)
+            mysql.connection.commit()
+            cursor.close()
 
-        return redirect("/students")
+            return redirect("/students")
+
+        except Exception as e:
+            logging.error(f"Error adding student: {e}")
+            return "There was an error adding the student.", 500
+
 
 @app.route("/students/delete/<int:id>")
 def delete_student(id):
