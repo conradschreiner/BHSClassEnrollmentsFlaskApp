@@ -1,0 +1,1 @@
+SELECT departmentID, subjectArea FROM `Departments`;
