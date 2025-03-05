@@ -27,7 +27,23 @@ logging.basicConfig(level=logging.DEBUG)
 
 mysql = MySQL(app)
 
-db_connection = db.connect_to_database()
+# reusable functions for sql execution tasks
+def run_select_query(query):
+    """Executes and returns a mysql select query against the configured database."""
+    cursor = mysql.connection.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
+
+def run_insert_query(query, values):
+    """Executes and commits a mysql insert query against the configured database."""
+
+    # initialize cursor
+    cursor = mysql.connection.cursor()
+
+    # execute given sql insert statement
+    cursor.execute(query, values)
+    mysql.connection.commit()
+    cursor.close()
 
 # exceptions
 class NoNumberNameInput(Exception):
@@ -56,15 +72,11 @@ def students():
     students_query = read_sql_file(r"database/sql_storage/select_all_students.sql")
     grade_levels_query = read_sql_file(r"database/sql_storage/select_gradelevel_names.sql")
 
-    cursor = mysql.connection.cursor()
-
     # run table query and fetch results
-    cursor.execute(students_query)
-    results_table = cursor.fetchall()
+    results_table = run_select_query(students_query)
 
     # pull available grade level names
-    cursor.execute(grade_levels_query)
-    results_gl_dropdown = cursor.fetchall()
+    results_gl_dropdown = run_select_query(grade_levels_query)
 
     if results_table and results_gl_dropdown:
         # generate jinja template with data populated from database
@@ -94,10 +106,7 @@ def add_student():
             user_data = (grade_level, first_name, last_name, birthdate)
 
             # execute and commit query then close connection
-            cursor = mysql.connection.cursor()
-            cursor.execute(insert_sql, user_data)
-            mysql.connection.commit()
-            cursor.close()
+            run_insert_query(insert_sql, user_data)
 
             return redirect("/students")
 
@@ -125,11 +134,11 @@ def gradelevels():
     """Route CRUD methods to the GradeLevels Entity Page"""
 
     # load query from file and store as string variable
-    gradelevels_query = read_sql_file(r"database/sql_storage/select_all_gradelevels.sql")
+    grade_levels_query = read_sql_file(r"database/sql_storage/select_all_gradelevels.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=gradelevels_query)
-    results = cursor.fetchall()
+    results = run_select_query(grade_levels_query)
+
     return render_template("gradelevels.j2", gradelevels=results)
 
 @app.route("/teachers", methods=["POST", "GET"])
@@ -140,8 +149,8 @@ def teachers():
     teachers_query = read_sql_file(r"database/sql_storage/select_all_teachers.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=teachers_query)
-    results = cursor.fetchall()
+    results = run_select_query(teachers_query)
+
     return render_template("teachers.j2", teachers=results)
 
 @app.route("/departments", methods=["POST", "GET"])
@@ -152,8 +161,8 @@ def departments():
     departments_query = read_sql_file(r"database/sql_storage/select_all_departments.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=departments_query)
-    results = cursor.fetchall()
+    results = run_select_query(departments_query)
+
     return render_template("departments.j2", departments=results)
 
 @app.route("/courses", methods=["POST", "GET"])
@@ -164,8 +173,8 @@ def courses():
     courses_query = read_sql_file(r"database/sql_storage/select_all_courses.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=courses_query)
-    results = cursor.fetchall()
+    results = run_select_query(courses_query)
+
     return render_template("courses.j2", courses=results)
 
 @app.route("/classsections", methods=["POST", "GET"])
@@ -173,11 +182,11 @@ def classsections():
     """Route CRUD methods to the ClassSections Entity Page"""
 
     # load query from file and store as string variable
-    classsections_query = read_sql_file(r"database/sql_storage/select_all_classsections.sql")
+    class_sections_query = read_sql_file(r"database/sql_storage/select_all_classsections.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=classsections_query)
-    results = cursor.fetchall()
+    results = run_select_query(class_sections_query)
+
     return render_template("classsections.j2", classsections=results)
 
 @app.route("/enrollments", methods=["POST", "GET"])
@@ -188,8 +197,8 @@ def enrollments():
     enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
 
     # run query and generate jinja template
-    cursor = db.execute_query(db_connection=db_connection, query=enrollments_query)
-    results = cursor.fetchall()
+    results = run_select_query(enrollments_query)
+
     return render_template("enrollments.j2", enrollments=results)
 
 
