@@ -41,7 +41,7 @@
       </tr>
     {% endfor %}
     </table>
-<form>
+<form name="add_grade_level" id="add_grade_level" action="/gradelevels/create" method="POST">
   <fieldset>
     <legend><strong>Add GradeLevel Record</strong></legend>
     <div>
@@ -52,8 +52,8 @@
       <label for="gradeNum">GradeLevel Number: </label>
       <input type="number" id="gradeNum" name="gradeNum"/>
     </div>
-    <label for="addGrade">
-        <button type="submit" id="addGrade">Add GradeLevel</button>
+    <label>
+        <button type="submit" id="add_grade_level">Add GradeLevel</button>
       </label>
   </fieldset>
 </form>

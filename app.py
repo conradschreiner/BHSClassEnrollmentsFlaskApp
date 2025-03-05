@@ -141,6 +141,33 @@ def gradelevels():
 
     return render_template("gradelevels.j2", gradelevels=results)
 
+@app.route("/gradelevels/create", methods=["POST"])
+def add_grade_level():
+    """Creates a new GradeLevel record in the database with the given user input"""
+    if request.method == "POST":
+        try:
+            grade_name = request.form["gradeName"]
+            grade_num = request.form["gradeNum"]
+
+            if contains_number(grade_name):
+                raise NoNumberNameInput("Numerical characters not allowed in GradeLevel name.", 400)
+
+            insert_query = ("INSERT INTO `GradeLevels` (gradeName, gradeNumber)"
+                          "VALUES (%s, %s);")
+            insert_values = (grade_name, grade_num)
+
+            run_insert_query(insert_query, insert_values)
+
+            return redirect("/gradelevels")
+
+        except NoNumberNameInput as e:
+            logging.error(f"Error adding grade level: {e}")
+            return str(e), e.error_code
+
+        except Exception as e:
+            logging.error(f"Error adding student: {e}")
+            return "There was an error adding the grade level.", 500
+
 @app.route("/teachers", methods=["POST", "GET"])
 def teachers():
     """Route CRUD methods to the Teachers Entity Page"""
