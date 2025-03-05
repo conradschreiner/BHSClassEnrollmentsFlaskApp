@@ -1,0 +1,1 @@
+SELECT courseID, name FROM `Courses`;

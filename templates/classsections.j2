@@ -40,51 +40,35 @@
       </tr>
     {% endfor %}
     </table>
-    <form>
+    <form name="add_classsection" id="add_classsection" action="/classsections/create" method="POST">
       <fieldset>
         <legend><strong>Add ClassSection Record</strong></legend>
-        <div>
-          <label for="course">Course: </label>
+      <label>Course:
           <select name="course" id="course">
-            <option value="0">--Available Courses--</option>
-            <option value="1">English</option>
-            <option value="2">Sophomore</option>
-            <option value="3">AP Calculus</option>
-            <option value="4">Geometry</option>
-            <option value="5">Driver's Ed</option>
-            <option value="6">US History</option>
+            <option value="0">--Select from available Courses--</option>
+            {% for course in courses %}
+                <option value="{{ course.courseID }}">{{ course.name }}</option>
+            {% endfor %}
           </select>
-        </div>
-        <div>
-          <label for="teacher">Teacher: </label>
+      </label>
+      <label>Teacher:
           <select name="teacher" id="teacher">
-            <option value="0">--Available Teachers--</option>
-            <option value="1">Kate Jones</option>
-            <option value="2">Brandon Lynn</option>
-            <option value="3">Ruth Rosenberg</option>
-            <option value="4">Brandon Lynn</option>
-            <option value="5">Dave Kim</option>
-            <option value="6">Sandra Springfield</option>
+            <option value="0">--Select from available Teachers--</option>
+            {% for teacher in teachers %}
+                <option value="{{ teacher.teacherID }}">{{ teacher.fullName }}</option>
+            {% endfor %}
           </select>
-        </div>
-        <div>
-          <label for="period">Period Number: </label>
+      </label>
+      <label for="period">Period Number: </label>
           <input type="number" id="period" name="period" />
-        </div>
-        <div>
-          <label for="classroom">Classroom Number: </label>
+      <label for="classroom">Classroom Number: </label>
           <input type="number" id="classroom" name="classroom" />
-        </div>
-        <div>
-          <label for="startDate">Start Date</label>
-          <input type="date" id="startDate" name="classroom" />
-        </div>
-        <div>
-          <label for="endDate">End Date</label>
-          <input type="date" id="endDate" name="classroom" />
-        </div>
-        <label for="addClass">
-          <button type="submit" id="addClass">Add ClassSection</button>
+      <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" name="startDate" />
+      <label for="endDate">End Date</label>
+          <input type="date" id="endDate" name="endDate" />
+        <label>
+          <button type="submit" id="add_classsection">Add ClassSection</button>
         </label>
       </fieldset>
     </form>
