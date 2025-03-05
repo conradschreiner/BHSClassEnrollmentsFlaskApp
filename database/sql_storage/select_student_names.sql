@@ -1,0 +1,1 @@
+SELECT studentID, CONCAT(fName, ' ', lName) as "fullName" FROM `Students`;

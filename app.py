@@ -35,6 +35,11 @@ def run_select_query(query):
     cursor.execute(query)
     return cursor.fetchall()
 
+def run_select_params_query(query, values):
+    """Executes and returns a mysql select query against the configured database."""
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, values)
+    return cursor.fetchall()
 
 def run_insert_query(query, values):
     """Executes and commits a mysql insert query against the configured database."""
@@ -343,12 +348,43 @@ def enrollments():
 
     # load query from file and store as string variable
     enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
+    student_names_query = read_sql_file(r"database/sql_storage/select_student_names.sql")
+    course_names_query = read_sql_file(r"database/sql_storage/select_course_names.sql")
+    teacher_names_query = read_sql_file(r"database/sql_storage/select_teacher_names.sql")
 
     # run query and generate jinja template
-    results = run_select_query(enrollments_query)
+    enrollments_table = run_select_query(enrollments_query)
+    student_dropdown = run_select_query(student_names_query)
+    course_dropdown = run_select_query(course_names_query)
+    teacher_dropdown = run_select_query(teacher_names_query)
 
-    return render_template("enrollments.j2", enrollments=results)
+    return render_template("enrollments.j2", enrollments=enrollments_table, students=student_dropdown, courses=course_dropdown, teachers=teacher_dropdown)
 
+@app.route("/enrollments/create", methods=["POST"])
+def add_enrollment():
+    """Creates a new enrollment record in the database with the given user input"""
+    if request.method == "POST":
+        try:
+            student = request.form["student"]
+            course = request.form["course"]
+            teacher = request.form["teacher"]
+            period = request.form["period"]
+            classroom = request.form["classroom"]
+
+            insert_query = ("INSERT INTO `Enrollments` (studentID, classSectionID, enrolledDate)"
+                            "VALUES (%s, "
+                            "(SELECT classSectionID FROM `ClassSections` WHERE teacherID = %s AND courseID = %s AND period = %s AND classroom = %s),"
+                            "%s);")
+
+            insert_values = (student, teacher, course, period, classroom, "CURRENT_DATE")
+
+            run_insert_query(insert_query, insert_values)
+
+            return redirect("/enrollments")
+
+        except Exception as e:
+            logging.error(f"Error adding enrollment: {e}")
+            return "There was an error adding the enrollment.", 500
 
 # Listener
 if __name__ == "__main__":
