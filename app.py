@@ -165,7 +165,7 @@ def add_grade_level():
             return str(e), e.error_code
 
         except Exception as e:
-            logging.error(f"Error adding student: {e}")
+            logging.error(f"Error adding grade level: {e}")
             return "There was an error adding the grade level.", 500
 
 @app.route("/teachers", methods=["POST", "GET"])
