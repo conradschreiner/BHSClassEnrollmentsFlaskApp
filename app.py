@@ -4,7 +4,6 @@
 # Source URL:  https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html
 
 import MySQLdb
-import database.db_connector as db
 import os
 from flask import Flask, render_template, json, redirect, url_for
 from flask_mysqldb import MySQL
@@ -328,6 +327,8 @@ def add_classsection():
             classroom = request.form["classroom"]
             start_date = request.form["startDate"]
             end_date = request.form["endDate"]
+
+            # allow for teacher to be null
 
             insert_query = ("INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
                             "VALUES (%s, %s, %s, %s, %s, %s);")
