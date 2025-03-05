@@ -41,7 +41,7 @@
       </tr>
     {% endfor %}
     </table>
-    <form>
+    <form name="add_teacher" id="add_teacher" action="/teachers/create" method="POST" >
       <fieldset>
         <legend><strong>Add a Teacher</strong></legend>
         <label for="fName">First Name</label>
@@ -50,8 +50,8 @@
         <input name="lName" id="lName" type="text" required />
         <label for="birthdate">Birthdate</label>
         <input name="birthdate" id="birthdate" type="date" required />
-        <label for="addteacher">
-          <button type="submit" id="addteacher">Add Teacher</button>
+        <label>
+          <button type="submit" id="add_teacher">Add Teacher</button>
         </label>
       </fieldset>
     </form>

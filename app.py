@@ -180,6 +180,36 @@ def teachers():
 
     return render_template("teachers.j2", teachers=results)
 
+@app.route("/teachers/create", methods=["POST"])
+def add_teacher():
+    """Creates a new teacher record in the database with the given user input"""
+    if request.method == "POST":
+        try:
+            first_name = request.form["fName"]
+            last_name = request.form["lName"]
+            birthdate = request.form["birthdate"]
+
+            if contains_number(first_name) or contains_number(last_name):
+                raise NoNumberNameInput("Numerical characters not allowed in first name or last name.", 400)
+
+            insert_query = ("INSERT INTO `Teachers` (fName, lName, birthdate)"
+                          "VALUES (%s, %s, %s);")
+
+            insert_values = (first_name, last_name, birthdate)
+
+            run_insert_query(insert_query, insert_values)
+
+            return redirect("/teachers")
+
+        except NoNumberNameInput as e:
+            logging.error(f"Error adding teacher: {e}")
+            return str(e), e.error_code
+
+        except Exception as e:
+            logging.error(f"Error adding teacher: {e}")
+            return "There was an error adding the teacher.", 500
+
+
 @app.route("/departments", methods=["POST", "GET"])
 def departments():
     """Route CRUD methods to the Departments Entity Page"""

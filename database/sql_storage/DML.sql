@@ -14,7 +14,7 @@ FROM `Students` s
 ORDER BY s.studentID; -- going to go with order by PK for now on every table query
 
 -- Teachers webpage table Query 
-SELECT t.teacherID, t.fName AS "First Name", t.lName AS "Last Name"
+SELECT t.teacherID, t.fName AS "First Name", t.lName AS "Last Name", t.birthdate as "Birthdate"
 FROM `Teachers` t
 ORDER BY t.teacherID;
 
