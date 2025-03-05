@@ -16,9 +16,9 @@ import logging
 app = Flask(__name__)
 
 # configure app to our db
-app.config['MYSQL_HOST'] = os.environ.get("340DBHOST") # replace with your database URL
-app.config['MYSQL_USER'] = os.environ.get("340DBUSER") # replace with your database username
-app.config['MYSQL_PASSWORD'] = os.environ.get("340DBPW") # replace with your database password
+app.config['MYSQL_HOST'] = os.environ.get("340DBHOST")  # replace with your database URL
+app.config['MYSQL_USER'] = os.environ.get("340DBUSER")  # replace with your database username
+app.config['MYSQL_PASSWORD'] = os.environ.get("340DBPW")  # replace with your database password
 app.config['MYSQL_DB'] = os.environ.get("340DB")
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
@@ -27,12 +27,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 mysql = MySQL(app)
 
+
 # reusable functions for sql execution tasks
 def run_select_query(query):
     """Executes and returns a mysql select query against the configured database."""
     cursor = mysql.connection.cursor()
     cursor.execute(query)
     return cursor.fetchall()
+
 
 def run_insert_query(query, values):
     """Executes and commits a mysql insert query against the configured database."""
@@ -45,10 +47,12 @@ def run_insert_query(query, values):
     mysql.connection.commit()
     cursor.close()
 
+
 # exceptions
 class NoNumberNameInput(Exception):
     """Flagged if a user tries to enter numerical values on an insert in an invalid scenario.
     source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/"""
+
     def __init__(self, message, error_code):
         self.message = message
         self.error_code = error_code
@@ -56,6 +60,7 @@ class NoNumberNameInput(Exception):
 
     def __str__(self):
         return f"{self.message} (HTTPS Error Code: {self.error_code})"
+
 
 # Routes
 @app.route('/')
@@ -84,6 +89,7 @@ def students():
     else:
         # display blank page with no data if the database has not been populated yet
         return render_template("students_no_data.html")
+
 
 @app.route('/students/create', methods=["POST"])
 def add_student():
@@ -141,6 +147,7 @@ def gradelevels():
 
     return render_template("gradelevels.j2", gradelevels=results)
 
+
 @app.route("/gradelevels/create", methods=["POST"])
 def add_grade_level():
     """Creates a new GradeLevel record in the database with the given user input"""
@@ -153,7 +160,7 @@ def add_grade_level():
                 raise NoNumberNameInput("Numerical characters not allowed in GradeLevel name.", 400)
 
             insert_query = ("INSERT INTO `GradeLevels` (gradeName, gradeNumber)"
-                          "VALUES (%s, %s);")
+                            "VALUES (%s, %s);")
             insert_values = (grade_name, grade_num)
 
             run_insert_query(insert_query, insert_values)
@@ -168,6 +175,7 @@ def add_grade_level():
             logging.error(f"Error adding grade level: {e}")
             return "There was an error adding the grade level.", 500
 
+
 @app.route("/teachers", methods=["POST", "GET"])
 def teachers():
     """Route CRUD methods to the Teachers Entity Page"""
@@ -179,6 +187,7 @@ def teachers():
     results = run_select_query(teachers_query)
 
     return render_template("teachers.j2", teachers=results)
+
 
 @app.route("/teachers/create", methods=["POST"])
 def add_teacher():
@@ -193,7 +202,7 @@ def add_teacher():
                 raise NoNumberNameInput("Numerical characters not allowed in first name or last name.", 400)
 
             insert_query = ("INSERT INTO `Teachers` (fName, lName, birthdate)"
-                          "VALUES (%s, %s, %s);")
+                            "VALUES (%s, %s, %s);")
 
             insert_values = (first_name, last_name, birthdate)
 
@@ -222,6 +231,27 @@ def departments():
 
     return render_template("departments.j2", departments=results)
 
+
+@app.route("/departments/create", methods=["POST"])
+def add_department():
+    """Creates a new department record in the database with the given user input"""
+
+    if request.method == "POST":
+        try:
+            subject_area = request.form["subjectArea"]
+
+            insert_query = ("INSERT INTO `Departments` (subjectArea)"
+                            "VALUES (%s);")
+
+            run_insert_query(insert_query, (subject_area,))
+
+            return redirect("/departments")
+
+        except Exception as e:
+            logging.error(f"Error adding department: {e}")
+            return "There was an error adding the department.", 500
+
+
 @app.route("/courses", methods=["POST", "GET"])
 def courses():
     """Route CRUD methods to the Courses Entity Page"""
@@ -234,6 +264,7 @@ def courses():
 
     return render_template("courses.j2", courses=results)
 
+
 @app.route("/classsections", methods=["POST", "GET"])
 def classsections():
     """Route CRUD methods to the ClassSections Entity Page"""
@@ -245,6 +276,7 @@ def classsections():
     results = run_select_query(class_sections_query)
 
     return render_template("classsections.j2", classsections=results)
+
 
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():

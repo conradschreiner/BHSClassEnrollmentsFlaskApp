@@ -41,14 +41,13 @@
       </tr>
     {% endfor %}
     </table>
-<form>
+<form name="add_department" id="add_department" action="/departments/create" method="POST" >
   <fieldset>
     <legend><strong>Add Department Record</strong></legend>
-    <div>
       <label for="subjectArea">Department Subject Area: </label>
-      <input type="text" id="subjectArea" name="subjectArea"/>
-    <label for="addDepartment">
-        <button type="submit" id="addDepartment">Add Department</button>
+      <input name="subjectArea" id="subjectArea"  type="text" required />
+    <label>
+        <button type="submit" id="add_department">Add Department</button>
       </label>
   </fieldset>
 </form>
