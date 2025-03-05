@@ -302,12 +302,40 @@ def classsections():
 
     # load query from file and store as string variable
     class_sections_query = read_sql_file(r"database/sql_storage/select_all_classsections.sql")
+    teacher_names_query = read_sql_file(r"database/sql_storage/select_teacher_names.sql")
+    course_names_query = read_sql_file(r"database/sql_storage/select_course_names.sql")
 
     # run query and generate jinja template
-    results = run_select_query(class_sections_query)
+    class_sections_table = run_select_query(class_sections_query)
+    teacher_dropdown = run_select_query(teacher_names_query)
+    course_dropdown = run_select_query(course_names_query)
 
-    return render_template("classsections.j2", classsections=results)
+    return render_template("classsections.j2", classsections=class_sections_table, teachers=teacher_dropdown, courses=course_dropdown)
 
+@app.route("/classsections/create", methods=["POST"])
+def add_classsection():
+    """Creates a new classsection record in the database with the given user input"""
+    if request.method == "POST":
+        try:
+            course = request.form["course"]
+            teacher = request.form["teacher"]
+            period = request.form["period"]
+            classroom = request.form["classroom"]
+            start_date = request.form["startDate"]
+            end_date = request.form["endDate"]
+
+            insert_query = ("INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
+                            "VALUES (%s, %s, %s, %s, %s, %s);")
+
+            insert_values = (course, teacher, start_date, end_date, period, classroom)
+
+            run_insert_query(insert_query, insert_values)
+
+            return redirect("/classsections")
+
+        except Exception as e:
+            logging.error(f"Error adding classsection: {e}")
+            return "There was an error adding the classsection.", 500
 
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
