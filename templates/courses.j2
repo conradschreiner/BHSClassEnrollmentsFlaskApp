@@ -41,31 +41,31 @@
       </tr>
     {% endfor %}
     </table>
-<form>
+<form name="add_course" id="add_course" action="/courses/create" method="POST">
   <fieldset>
     <legend><strong>Add Course Record</strong></legend>
     <div>
-      <label for="coursename">Course Name: </label>
-      <input type="text" id="coursename" name="coursename"/>
+      <label for="courseName">Course Name: </label>
+      <input type="text" id="courseName" name="courseName"/>
     </div>
         <div>
-      <label for="course">course: </label>
-        <select name="courses" id="course">
-            <option value="0">--Available courses--</option>
-            <option value="1">Math</option>
-            <option value="Science">Science</option>
-            <option value="History">History</option>
-            <option value="English">English</option>
-        </select>
-      <label for="grade" >Grade: </label>
-      <select name="grade" id="grade">
-        <option value="">--Available GradeLevels--</option>
-        <option>Freshman</option>
-        <option>Sophomore</option>
-        <option>Junior</option>
-        <option>Senior</option>
-      </select>
-    <label for="addCourse">
+      <label>Department:
+          <select name="department" id="department">
+            <option value="0">--Select from available Department Subject Areas--</option>
+            {% for dep in departments %}
+                <option value="{{ dep.departmentID }}">{{ dep.subjectArea }}</option>
+            {% endfor %}
+          </select>
+      </label>
+      <label>Grade Name:
+          <select name="gradeLevel" id="gradeLevel">
+            <option value="0">--Select from available Grade Levels--</option>
+            {% for grade in grade_levels %}
+                <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+            {% endfor %}
+          </select>
+      </label>
+    <label>
         <button type="submit" id="addCourse">Add Course</button>
       </label>
   </fieldset>

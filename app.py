@@ -258,11 +258,42 @@ def courses():
 
     # load query from file and store as string variable
     courses_query = read_sql_file(r"database/sql_storage/select_all_courses.sql")
+    departments_query = read_sql_file(r"database/sql_storage/select_department_subject_areas.sql")
+    grade_levels_query = read_sql_file(r"database/sql_storage/select_gradelevel_names.sql")
 
     # run query and generate jinja template
-    results = run_select_query(courses_query)
+    courses_table = run_select_query(courses_query)
 
-    return render_template("courses.j2", courses=results)
+    # pull available grade level names
+    results_gl_dropdown = run_select_query(grade_levels_query)
+
+    # pull available department subject areas
+    results_dep_dropdown = run_select_query(departments_query)
+
+    return render_template("courses.j2", courses=courses_table, grade_levels=results_gl_dropdown, departments=results_dep_dropdown)
+
+@app.route("/courses/create", methods=["POST"])
+def add_course():
+    """Creates a new course record in the database with the given user input"""
+    if request.method == "POST":
+        try:
+            course_name = request.form["courseName"]
+            department = request.form["department"]
+            grade_level = request.form["gradeLevel"]
+
+            insert_query = ("INSERT INTO `Courses` (gradeLevelID, name, departmentID)"
+                            "VALUES (%s, %s, %s);")
+
+            insert_values = (grade_level, course_name, department)
+
+            run_insert_query(insert_query, insert_values)
+
+            return redirect("/courses")
+
+        except Exception as e:
+            logging.error(f"Error adding department: {e}")
+            return "There was an error adding the department.", 500
+
 
 
 @app.route("/classsections", methods=["POST", "GET"])
