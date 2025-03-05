@@ -329,13 +329,21 @@ def add_classsection():
             end_date = request.form["endDate"]
 
             # allow for teacher to be null
+            if teacher == "0":
+                insert_query = ("INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
+                                "VALUES (%s, NULL, %s, %s, %s, %s);")
 
-            insert_query = ("INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
-                            "VALUES (%s, %s, %s, %s, %s, %s);")
+                insert_values = (course, start_date, end_date, period, classroom)
 
-            insert_values = (course, teacher, start_date, end_date, period, classroom)
+                run_insert_query(insert_query, insert_values)
+            else:
+                insert_query = (
+                    "INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
+                    "VALUES (%s, %s, %s, %s, %s, %s);")
 
-            run_insert_query(insert_query, insert_values)
+                insert_values = (course, teacher, start_date, end_date, period, classroom)
+
+                run_insert_query(insert_query, insert_values)
 
             return redirect("/classsections")
 
