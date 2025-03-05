@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `cs340_schrecon`.`ClassSections` (
   CONSTRAINT `teacherID`
     FOREIGN KEY (`teacherID`)
     REFERENCES `cs340_schrecon`.`Teachers` (`teacherID`)
-    ON UPDATE CASCADE ) -- CASCADE When a teacher is updated (specific Update functionality not implemented on Teachers table yet)
+    ON DELETE SET NULL ) -- if a teacher record is deleted, then set to null
 ENGINE = InnoDB;
 
 -- CREATE UNIQUE INDEX `classSectionID_UNIQUE` ON `cs340_schrecon`.`ClassSections` (`classSectionID` ASC) VISIBLE;
