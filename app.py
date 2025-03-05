@@ -383,9 +383,9 @@ def add_enrollment():
             insert_query = ("INSERT INTO `Enrollments` (studentID, classSectionID, enrolledDate)"
                             "VALUES (%s, "
                             "(SELECT classSectionID FROM `ClassSections` WHERE teacherID = %s AND courseID = %s AND period = %s AND classroom = %s),"
-                            "%s);")
+                            "CURRENT_DATE);")
 
-            insert_values = (student, teacher, course, period, classroom, "CURRENT_DATE")
+            insert_values = (student, teacher, course, period, classroom)
 
             run_insert_query(insert_query, insert_values)
 
