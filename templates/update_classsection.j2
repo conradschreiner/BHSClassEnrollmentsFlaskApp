@@ -32,9 +32,11 @@
       </tr>
     {% endfor %}
     </table>
-<form name="edit_classsection" id="edit_classsection" action="/classsections/update/<int:id>" method="POST">
+  {% for classsection in classsections %}
+<form name="update_classsection" id="update_classsection" action="/classsections/update/{{ classsection.classSectionID }}" method="POST">
+{% endfor %}
       <fieldset>
-        <legend><strong>Add ClassSection Record</strong></legend>
+        <legend><strong>Edit ClassSection Record</strong></legend>
       <label>Course:
           <select name="course" id="course">
             <option value="0">--Select from available Courses--</option>
@@ -60,7 +62,7 @@
       <label for="endDate">End Date</label>
           <input type="date" id="endDate" name="endDate" />
         <label>
-          <button type="submit" id="edit_classsection">Confirm update of ClassSection record</button>
+          <button type="submit" id="update_classsection">Confirm update of ClassSection record</button>
         </label>
       </fieldset>
     </form>
