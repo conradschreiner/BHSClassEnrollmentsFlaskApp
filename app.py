@@ -11,6 +11,10 @@ from flask import request
 from read_sql_file import read_sql_file
 from contains_number import contains_number
 import logging
+from dotenv import load_dotenv, find_dotenv
+
+# Load our environment variables from the .env file in the root of our project. - per starter-app 
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 
