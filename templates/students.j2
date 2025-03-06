@@ -5,88 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" media="screen" href="../static/css/main.css">
     <title>Students</title>
+    <script>
+      function openUpdateModal(event) {
+        event.preventDefault(); 
+        document.getElementById('update-modal').style.display = "block";
+      }
+      function closeUpdateModal() {
+        document.getElementById('update-modal').style.display = "none";
+      }
+    </script>
   </head>
   <body>
-<nav>
-    <a href="/">Home</a>
-    <a href="/gradelevels">GradeLevels</a>
-    <a href="/students">Students</a>
-    <a href="/teachers">Teachers</a>
-    <a href="/departments">Departments</a>
-    <a href="/courses">Courses</a>
-    <a href="/classsections">ClassSections</a>
-    <a href="/enrollments">Enrollments</a>
-</nav>
-<section>
-    <h1>Students Table</h1>
-    <table border="1" cellpadding="5" style="border-collapse:collapse">
-      <tr>
-        <!-- Iterate through each key in the first entry to get the
-        column name -->
-        {% for key in students[0].keys() %}
+    <nav>
+        <a href="/">Home</a>
+        <a href="/gradelevels">GradeLevels</a>
+        <a href="/students">Students</a>
+        <a href="/teachers">Teachers</a>
+        <a href="/departments">Departments</a>
+        <a href="/courses">Courses</a>
+        <a href="/classsections">ClassSections</a>
+        <a href="/enrollments">Enrollments</a>
+    </nav>
+    <section>
+        <h1>Students Table</h1>
+        <table border="1" cellpadding="5" style="border-collapse:collapse">
+          <tr>
+            <!-- Iterate through each key in the first entry to get the
+            column name -->
+            {% for key in students[0].keys() %}
 
-        <!-- Create a <th> tag with the key inside of it, this will be
-        our header row -->
-        <th>{{ key }}</th>
+            <!-- Create a <th> tag with the key inside of it, this will be
+            our header row -->
+            <th>{{ key }}</th>
 
-        <!-- End of this for loop -->
+            <!-- End of this for loop -->
+            {% endfor %}
+          </tr>
+        {% for student in students %}
+          <tr>
+    <!-- Then iterate through every key in the current person dictionary -->
+          {% for key in student.keys() %}
+            <td>{{student[key]}}</td>
+          {% endfor %}
+            <td>
+                <a href="/students/delete/{{student.studentID}}">
+                  <button type='button'>remove</button>
+                </a>
+            </td>
+            <td>
+                <a href="">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" onclick="openUpdateModal(event)">
+                  Update
+                  </button>
+                </a>
+            </td>
+          </tr>
         {% endfor %}
-      </tr>
-    {% for student in students %}
-      <tr>
- <!-- Then iterate through every key in the current person dictionary -->
-        {% for key in student.keys() %}
-        <td>{{student[key]}}</td>
-        {% endfor %}
-          <td>
-              <a href="/students/delete/{{student.studentID}}">
-                <button type='button'>remove</button>
-              </a>
-          </td>
-      </tr>
-    {% endfor %}
-    </table>
-  <form name="add_student" id="add_student" action="/students/create" method="POST">
-      <fieldset>
-        <legend><strong>Add a Student</strong></legend>
-      <tr>
-      <label>Last Name:
-            <input
-            name="lName"
-            id="lName"
+        
+        </table>
+      <form name="add_student" id="add_student" action="/students/create" method="POST">
+          <fieldset>
+            <legend><strong>Add a Student</strong></legend>
+          <tr>
+          <label>Last Name:
+                <input
+                name="lName"
+                id="lName"
+                type="text"
+                required
+              />
+          </label>
+
+          <label>First Name:
+                <input
+            id="fName"
+            name="fName"
             type="text"
             required
           />
-      </label>
+          </label>
 
-      <label>First Name:
+          <label>Birthdate:
+                <input
+            name="birthdate"
+            id="birthdate"
+            type="date"
+            required
+          />
+          </label>
+          <label>Grade Name:
+                <select name="gradeLevel" id="gradeLevel">
+                <option value="0">--Select from available Grade Levels--</option>
+                {% for grade in grade_levels %}
+                    <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+                {% endfor %}
+          </select>
+          </label>
+            <button type="submit" id="add_student">Add Student</button>
+          </fieldset>
+      </form>
+    </section>
+     <!-- modal adapted from the tutorial here: https://www.w3schools.com/howto/howto_css_modals.asp -->
+    <div class="modal" id="update-modal">
+        <button type="button" onclick="closeUpdateModal()">
+          <span>&times;</span>
+        </button>
+        <div class="modal-body">
+          <p>
+            <label>Last Name:</label>
             <input
-        id="fName"
-        name="fName"
-        type="text"
-        required
-      />
-      </label>
-
-      <label>Birthdate:
+              name="lName"
+              id="lName"
+              type="text"
+              required/>
+          </p>
+          <p>
+            <label>First Name:</label>
             <input
-        name="birthdate"
-        id="birthdate"
-        type="date"
-        required
-      />
-      </label>
-      <label>Grade Name:
+              id="fName"
+              name="fName"
+              type="text"
+              required
+            />
+          </p>
+          <p>
+            <label>Birthdate:</label>
+            <input
+              name="birthdate"
+              id="birthdate"
+              type="date"
+              required/>
+          </p>
+          <p>
+            <label>Grade Name:</label>
             <select name="gradeLevel" id="gradeLevel">
-            <option value="0">--Select from available Grade Levels--</option>
-            {% for grade in grade_levels %}
-                <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
-            {% endfor %}
-      </select>
-      </label>
-        <button type="submit" id="add_student">Add Student</button>
-      </fieldset>
-  </form>
-  </section>
+              <option value="0">--Select from available Grade Levels--</option>
+              {% for grade in grade_levels %}
+                  <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+              {% endfor %}
+            </select>
+          </p>
+          <button type="submit" id="update_student">Update Student</button>
+        </div>
+    </div>
   </body>
 </html>
