@@ -394,29 +394,52 @@ def update_classsection(id):
             start_date = request.form["startDate"]
             end_date = request.form["endDate"]
 
-            if teacher == "0":
-                update_query = ("UPDATE `ClassSections`"
-                                "SET courseID = %s, teacherID = NULL, startDate = %s, endDate = %s,"
-                                "period = %s, classroom = %s" 
-                                "WHERE classSectionID = %s;")
-                update_values = (course, start_date, end_date, period, classroom, id,)
+            # dynamically build the update statement by storing the SET fields and values in lists based on request.form responses
+            update_fields = []
+            update_values = []
 
-                run_change_query(update_query, update_values)
-                return redirect("/classsections")
+            # if course response value is not "0" then include, if is 0 then exclude
+            if course != "0":
+                update_fields.append("courseID = %s")
+                update_values.append(course)
 
+            # if teacher response is not "0" then include request, if it is "0" then set to NULL
+            if teacher != "0":
+                update_fields.append("teacherID = %s")
+                update_values.append(teacher)
             else:
-                update_query = ("UPDATE `ClassSections`"
-                                "SET courseID = %s, teacherID = %s, startDate = %s, endDate = %s,"
-                                "period = %s, classroom = %s" 
-                                "WHERE classSectionID = %s;")
-                update_values = (course, teacher, start_date, end_date, period, classroom, id,)
+                update_fields.append("teacherID = NULL")
 
-                run_change_query(update_query, update_values)
-                return redirect("/classsections")
+            # if startDate response value is not "0" then include, if is 0 then exclude
+            if start_date != "0":
+                update_fields.append("startDate = %s")
+                update_values.append(start_date)
+
+            # if endDate response value is not "0" then include, if is 0 then exclude
+            if end_date != "0":
+                update_fields.append("endDate = %s")
+                update_values.append(end_date)
+
+            # if period response value is not "0" then include, if is 0 then exclude
+            if period != "0":
+                update_fields.append("period = %s")
+                update_values.append(period)
+
+            # if classroom response value is not "0" then include, if is 0 then exclude
+            if classroom != "0":
+                update_fields.append("classroom = %s")
+                update_values.append(classroom)
+
+            update_values.append(id)
+
+            update_query = f"UPDATE `ClassSections` SET {', '.join(update_fields)} WHERE classSectionID = %s;"
+
+            run_change_query(update_query, update_values)
+            return redirect("/classsections")
 
         except Exception as e:
-            logging.error(f"Error adding classsection: {e}")
-
+            logging.error(f"Error updating classsection: {e}")
+            return "There was an error updating the classsection.", 500
 
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
