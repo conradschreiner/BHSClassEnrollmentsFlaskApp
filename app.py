@@ -351,6 +351,32 @@ def add_classsection():
             logging.error(f"Error adding classsection: {e}")
             return "There was an error adding the classsection.", 500
 
+@app.route('/classsections/update/<int:id>', methods=["GET", "POST"])
+def edit_classsection(id):
+    """Prompts the user to edit the given classsection record on the row of the table."""
+    if request.method == "GET":
+        # retrieve all data for the given classSectionID
+        select_id_query = """SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
+        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
+        cs.period AS "Period", cs.classroom as "Classroom", c.name as "Course Name",
+        CONCAT(t.fName, ' ', t.lName) AS "Teacher Name" -- including to better understand the NULLable foreign key
+        FROM `ClassSections` cs
+        INNER JOIN `Courses` c on cs.courseID = c.courseID
+        LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID
+        WHERE cs.classSectionID = %s;"""
+        value = (id,)
+        data = run_select_params_query(select_id_query, value)
+
+        # drop down queries
+        teacher_names_query = read_sql_file(r"database/sql_storage/select_teacher_names.sql")
+        course_names_query = read_sql_file(r"database/sql_storage/select_course_names.sql")
+
+        # run query and generate jinja template
+        teacher_dropdown = run_select_query(teacher_names_query)
+        course_dropdown = run_select_query(course_names_query)
+
+        return render_template("update_classsection.j2", classsections=data, teachers=teacher_dropdown, courses=course_dropdown)
+
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
     """Route CRUD methods to the Enrollments Entity Page"""

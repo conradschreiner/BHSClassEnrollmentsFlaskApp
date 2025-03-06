@@ -2,22 +2,14 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" media="screen" href="../static/css/main.css" />
-    <title>ClassSections</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='/css/main.css') }}"/>
+    <title>Update Class Section Record</title>
   </head>
   <body>
-    <nav>
-    <a href="/">Home</a>
-    <a href="/gradelevels">Grade Levels</a>
-    <a href="/students">Students</a>
-    <a href="/teachers">Teachers</a>
-    <a href="/departments">Departments</a>
-    <a href="/courses">Courses</a>
-    <a href="/classsections">Class Sections</a>
-    <a href="/enrollments">Enrollments</a>
-    </nav>
-    <section>
-    <h1>ClassSections Table</h1>
+  <nav>
+      <a href="/classsections">Abort update and return to Class Sections</a>
+  </nav>
+  <section>
 <table border="1" cellpadding="5" style="border-collapse:collapse">
       <tr>
         <!-- Iterate through each key in the first entry to get the
@@ -37,15 +29,10 @@
         {% for key in classsection.keys() %}
         <td>{{classsection[key]}}</td>
         {% endfor %}
-        <td>
-            <a href="/classsections/update/{{ classsection.classSectionID }}">
-           <button type="button" >edit</button>
-            </a>
-        </td>
       </tr>
     {% endfor %}
     </table>
-    <form name="add_classsection" id="add_classsection" action="/classsections/create" method="POST">
+<form name="edit_classsection" id="edit_classsection" action="/classsections/update/<int:id>" method="POST">
       <fieldset>
         <legend><strong>Add ClassSection Record</strong></legend>
       <label>Course:
@@ -73,10 +60,10 @@
       <label for="endDate">End Date</label>
           <input type="date" id="endDate" name="endDate" />
         <label>
-          <button type="submit" id="add_classsection">Add ClassSection</button>
+          <button type="submit" id="edit_classsection">Confirm update of ClassSection record</button>
         </label>
       </fieldset>
     </form>
-      </section>
+  </section>
   </body>
 </html>
