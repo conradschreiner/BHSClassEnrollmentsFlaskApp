@@ -11,6 +11,10 @@ from flask import request
 from read_sql_file import read_sql_file
 from contains_number import contains_number
 import logging
+from dotenv import load_dotenv, find_dotenv
+
+# Load our environment variables from the .env file in the root of our project. - per starter-app 
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 
@@ -39,14 +43,16 @@ def run_select_query(query):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 def run_select_params_query(query, values):
     """Executes and returns a mysql select query against the configured database."""
     cursor = mysql.connection.cursor()
     cursor.execute(query, values)
     return cursor.fetchall()
 
-def run_insert_query(query, values):
-    """Executes and commits a mysql insert query against the configured database."""
+
+def run_change_query(query, values):
+    """Executes and commits a mysql insert, update or delete query against the configured database."""
 
     # initialize cursor
     cursor = mysql.connection.cursor()
@@ -121,7 +127,7 @@ def add_student():
             user_data = (grade_level, first_name, last_name, birthdate)
 
             # execute and commit query then close connection
-            run_insert_query(insert_sql, user_data)
+            run_change_query(insert_sql, user_data)
 
             return redirect("/students")
 
@@ -172,7 +178,7 @@ def add_grade_level():
                             "VALUES (%s, %s);")
             insert_values = (grade_name, grade_num)
 
-            run_insert_query(insert_query, insert_values)
+            run_change_query(insert_query, insert_values)
 
             return redirect("/gradelevels")
 
@@ -215,7 +221,7 @@ def add_teacher():
 
             insert_values = (first_name, last_name, birthdate)
 
-            run_insert_query(insert_query, insert_values)
+            run_change_query(insert_query, insert_values)
 
             return redirect("/teachers")
 
@@ -252,7 +258,7 @@ def add_department():
             insert_query = ("INSERT INTO `Departments` (subjectArea)"
                             "VALUES (%s);")
 
-            run_insert_query(insert_query, (subject_area,))
+            run_change_query(insert_query, (subject_area,))
 
             return redirect("/departments")
 
@@ -279,7 +285,9 @@ def courses():
     # pull available department subject areas
     results_dep_dropdown = run_select_query(departments_query)
 
-    return render_template("courses.j2", courses=courses_table, grade_levels=results_gl_dropdown, departments=results_dep_dropdown)
+    return render_template("courses.j2", courses=courses_table, grade_levels=results_gl_dropdown,
+                           departments=results_dep_dropdown)
+
 
 @app.route("/courses/create", methods=["POST"])
 def add_course():
@@ -295,14 +303,13 @@ def add_course():
 
             insert_values = (grade_level, course_name, department)
 
-            run_insert_query(insert_query, insert_values)
+            run_change_query(insert_query, insert_values)
 
             return redirect("/courses")
 
         except Exception as e:
             logging.error(f"Error adding department: {e}")
             return "There was an error adding the department.", 500
-
 
 
 @app.route("/classsections", methods=["POST", "GET"])
@@ -319,7 +326,9 @@ def classsections():
     teacher_dropdown = run_select_query(teacher_names_query)
     course_dropdown = run_select_query(course_names_query)
 
-    return render_template("classsections.j2", classsections=class_sections_table, teachers=teacher_dropdown, courses=course_dropdown)
+    return render_template("classsections.j2", classsections=class_sections_table, teachers=teacher_dropdown,
+                           courses=course_dropdown)
+
 
 @app.route("/classsections/create", methods=["POST"])
 def add_classsection():
@@ -335,12 +344,13 @@ def add_classsection():
 
             # allow for teacher to be null
             if teacher == "0":
-                insert_query = ("INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
-                                "VALUES (%s, NULL, %s, %s, %s, %s);")
+                insert_query = (
+                    "INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
+                    "VALUES (%s, NULL, %s, %s, %s, %s);")
 
                 insert_values = (course, start_date, end_date, period, classroom)
 
-                run_insert_query(insert_query, insert_values)
+                run_change_query(insert_query, insert_values)
             else:
                 insert_query = (
                     "INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
@@ -348,13 +358,97 @@ def add_classsection():
 
                 insert_values = (course, teacher, start_date, end_date, period, classroom)
 
-                run_insert_query(insert_query, insert_values)
+                run_change_query(insert_query, insert_values)
 
             return redirect("/classsections")
 
         except Exception as e:
             logging.error(f"Error adding classsection: {e}")
             return "There was an error adding the classsection.", 500
+
+
+@app.route('/classsections/update/<int:id>', methods=["GET", "POST"])
+def update_classsection(id):
+    """Prompts the user to edit the given classsection record on the row of the table."""
+    if request.method == "GET":
+        # retrieve all data for the given classSectionID
+        select_id_query = """SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
+        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
+        cs.period AS "Period", cs.classroom as "Classroom", c.name as "Course Name",
+        CONCAT(t.fName, ' ', t.lName) AS "Teacher Name" -- including to better understand the NULLable foreign key
+        FROM `ClassSections` cs
+        INNER JOIN `Courses` c on cs.courseID = c.courseID
+        LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID
+        WHERE cs.classSectionID = %s;"""
+        class_section_id = (id,)
+        data = run_select_params_query(select_id_query, class_section_id)
+
+        # drop down queries
+        teacher_names_query = read_sql_file(r"database/sql_storage/select_teacher_names.sql")
+        course_names_query = read_sql_file(r"database/sql_storage/select_course_names.sql")
+
+        # run query and generate jinja template
+        teacher_dropdown = run_select_query(teacher_names_query)
+        course_dropdown = run_select_query(course_names_query)
+
+        return render_template("update_classsection.j2", classsections=data, teachers=teacher_dropdown,
+                               courses=course_dropdown)
+
+    if request.method == "POST":
+        try:
+            course = request.form["course"]
+            teacher = request.form["teacher"]
+            period = request.form["period"]
+            classroom = request.form["classroom"]
+            start_date = request.form["startDate"]
+            end_date = request.form["endDate"]
+
+            # dynamically build the update statement by storing the SET fields and values in lists based on request.form responses
+            update_fields = []
+            update_values = []
+
+            # if course response value is not "0" then include, if is 0 then exclude
+            if course != "0":
+                update_fields.append("courseID = %s")
+                update_values.append(course)
+
+            # if teacher response is not "0" then include request, if it is "0" then set to NULL
+            if teacher != "0":
+                update_fields.append("teacherID = %s")
+                update_values.append(teacher)
+            else:
+                update_fields.append("teacherID = NULL")
+
+            # if startDate response value is not "0" then include, if is 0 then exclude
+            if start_date != "0":
+                update_fields.append("startDate = %s")
+                update_values.append(start_date)
+
+            # if endDate response value is not "0" then include, if is 0 then exclude
+            if end_date != "0":
+                update_fields.append("endDate = %s")
+                update_values.append(end_date)
+
+            # if period response value is not "0" then include, if is 0 then exclude
+            if period != "0":
+                update_fields.append("period = %s")
+                update_values.append(period)
+
+            # if classroom response value is not "0" then include, if is 0 then exclude
+            if classroom != "0":
+                update_fields.append("classroom = %s")
+                update_values.append(classroom)
+
+            update_values.append(id)
+
+            update_query = f"UPDATE `ClassSections` SET {', '.join(update_fields)} WHERE classSectionID = %s;"
+
+            run_change_query(update_query, update_values)
+            return redirect("/classsections")
+
+        except Exception as e:
+            logging.error(f"Error updating classsection: {e}")
+            return "There was an error updating the classsection.", 500
 
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
@@ -372,7 +466,9 @@ def enrollments():
     course_dropdown = run_select_query(course_names_query)
     teacher_dropdown = run_select_query(teacher_names_query)
 
-    return render_template("enrollments.j2", enrollments=enrollments_table, students=student_dropdown, courses=course_dropdown, teachers=teacher_dropdown)
+    return render_template("enrollments.j2", enrollments=enrollments_table, students=student_dropdown,
+                           courses=course_dropdown, teachers=teacher_dropdown)
+
 
 @app.route("/enrollments/create", methods=["POST"])
 def add_enrollment():
@@ -392,13 +488,14 @@ def add_enrollment():
 
             insert_values = (student, teacher, course, period, classroom)
 
-            run_insert_query(insert_query, insert_values)
+            run_change_query(insert_query, insert_values)
 
             return redirect("/enrollments")
 
         except Exception as e:
             logging.error(f"Error adding enrollment: {e}")
             return "There was an error adding the enrollment.", 500
+
 
 # Listener
 if __name__ == "__main__":

@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='/css/main.css') }}"/>
-    <title>Enrollments</title>
+    <title>Update Class Section Record</title>
   </head>
   <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/gradelevels">Grade Levels</a>
-        <a href="/students">Students</a>
-        <a href="/teachers">Teachers</a>
-        <a href="/departments">Departments</a>
-        <a href="/courses">Courses</a>
-        <a href="/classsections">Class Sections</a>
-        <a href="/enrollments">Enrollments</a>
-    </nav>
-    <section>
-    <h1>Enrollments Table</h1>
-    <table border="1" cellpadding="5" style="border-collapse:collapse">
+  <nav>
+      <a href="/classsections">Abort update and return to Class Sections</a>
+  </nav>
+  <section>
+<table border="1" cellpadding="5" style="border-collapse:collapse">
       <tr>
         <!-- Iterate through each key in the first entry to get the
         column name -->
-        {% for key in enrollments[0].keys() %}
+        {% for key in classsections[0].keys() %}
 
         <!-- Create a <th> tag with the key inside of it, this will be
         our header row -->
@@ -32,26 +23,20 @@
         <!-- End of this for loop -->
         {% endfor %}
       </tr>
-    {% for enrollment in enrollments %}
+    {% for classsection in classsections %}
       <tr>
  <!-- Then iterate through every key in the current person dictionary -->
-        {% for key in enrollment.keys() %}
-        <td>{{enrollment[key]}}</td>
+        {% for key in classsection.keys() %}
+        <td>{{classsection[key]}}</td>
         {% endfor %}
       </tr>
     {% endfor %}
     </table>
-    <form name="add_enrollment" id="add_enrollment" action="/enrollments/create" method="POST">
+  {% for classsection in classsections %}
+<form name="update_classsection" id="update_classsection" action="/classsections/update/{{ classsection.classSectionID }}" method="POST">
+{% endfor %}
       <fieldset>
-        <legend><strong>Add Enrollment Record</strong></legend>
-      <label>Student:
-          <select name="student" id="student">
-            <option value="0">--Select from available Students--</option>
-            {% for student in students %}
-                <option value="{{ student.studentID }}">{{ student.fullName }}</option>
-            {% endfor %}
-          </select>
-      </label>
+        <legend><strong>Edit ClassSection Record</strong></legend>
       <label>Course:
           <select name="course" id="course">
             <option value="0">--Select from available Courses--</option>
@@ -68,18 +53,19 @@
             {% endfor %}
           </select>
       </label>
-          <label for="period">Period Number: </label>
+      <label for="period">Period Number: </label>
           <input type="number" id="period" name="period" />
-        </div>
-        <div>
-          <label for="classroom">Classroom Number: </label>
+      <label for="classroom">Classroom Number: </label>
           <input type="number" id="classroom" name="classroom" />
-        </div>
+      <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" name="startDate" />
+      <label for="endDate">End Date</label>
+          <input type="date" id="endDate" name="endDate" />
         <label>
-          <button type="submit" id="add_enrollment">Enroll Student</button>
+          <button type="submit" id="update_classsection">Confirm update of ClassSection record</button>
         </label>
       </fieldset>
     </form>
-      </section>
+  </section>
   </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" media="screen" href="../static/css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='/css/main.css') }}" />
     <title>ClassSections</title>
   </head>
   <body>
@@ -37,6 +37,11 @@
         {% for key in classsection.keys() %}
         <td>{{classsection[key]}}</td>
         {% endfor %}
+        <td>
+            <a href="/classsections/update/{{ classsection.classSectionID }}">
+           <button type="button" >edit</button>
+            </a>
+        </td>
       </tr>
     {% endfor %}
     </table>
