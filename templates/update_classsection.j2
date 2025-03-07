@@ -37,14 +37,7 @@
 {% endfor %}
       <fieldset>
         <legend><strong>Edit ClassSection Record</strong></legend>
-      <label>Course:
-          <select name="course" id="course">
-            <option value="0">--Select from available Courses--</option>
-            {% for course in courses %}
-                <option value="{{ course.courseID }}">{{ course.name }}</option>
-            {% endfor %}
-          </select>
-      </label>
+      <p>Modify the teacher for the above class section, which can set to NULL or a different listed teacher.</p>
       <label>Teacher:
           <select name="teacher" id="teacher">
             <option value="0">--Select from available Teachers--</option>
