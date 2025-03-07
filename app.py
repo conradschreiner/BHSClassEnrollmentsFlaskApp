@@ -397,14 +397,25 @@ def update_classsection(id):
             start_date = request.form["startDate"]
             end_date = request.form["endDate"]
 
+            # store request responses as dictionary for filtering
             field_dict = {"period": period, "classroom": classroom, "startDate": start_date, "endDate": end_date}
+
+            # filter dictionary to remove any pairs that contain an empty value
             field_dict_filtered = {k: v for k, v in field_dict.items() if v != ""}
 
+            # dynamically create SET list from filtered dictionary
             update_set_list = [f"{k} = %s" for k in field_dict_filtered.keys()]
 
-            if teacher != "0":
+            # update to new teacher
+            if teacher != "0" and teacher != "m":
                 update_set_list.append("teacherID = %s")
                 update_values = list(field_dict_filtered.values()) + [teacher, id]
+
+            elif teacher == "m":
+                # exclude teacher field from update so that current one is maintained
+                update_values = list(field_dict_filtered.values()) + [id]
+
+            # set teacher to NULL - "NULLable" relationship
             else:
                 update_set_list.append("teacherID = NULL")
                 update_values = list(field_dict_filtered.values()) + [id]
