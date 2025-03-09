@@ -6,8 +6,11 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='/css/main.css') }}">
     <title>Students</title>
     <script>
-      function openUpdateModal(event) {
+      function openUpdateModal(event, index, id, birthdate, fName, lName) {
         event.preventDefault(); 
+        document.getElementById('fName-update').value = fName;
+        document.getElementById('lName-update').value = lName;
+        document.getElementById('birthdate-update').value = birthdate;
         document.getElementById('update-modal').style.display = "block";
       }
       function closeUpdateModal() {
@@ -42,6 +45,7 @@
             {% endfor %}
           </tr>
         {% for student in students %}
+          {% set index = students.index(student) %}
           <tr>
     <!-- Then iterate through every key in the current person dictionary -->
           {% for key in student.keys() %}
@@ -54,7 +58,7 @@
             </td>
             <td>
                 <a href="">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" onclick="openUpdateModal(event)">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" onclick="openUpdateModal(event, {{index}}, {{student["studentID"]}},'{{student["Birthdate"]}}', '{{student["First Name"]}}', '{{student["Last Name"]}}')">
                   Update
                   </button>
                 </a>
@@ -107,24 +111,26 @@
     </section>
      <!-- modal adapted from the tutorial here: https://www.w3schools.com/howto/howto_css_modals.asp -->
     <div class="modal" id="update-modal">
-        <button type="button" onclick="closeUpdateModal()">
-          <span>&times;</span>
-        </button>
-        <div class="modal-body">
+      <button type="button" onclick="closeUpdateModal()">
+        <span>&times;</span>
+      </button>
+      <div class="modal-body">
           <p>
             <label>Last Name:</label>
             <input
               name="lName"
-              id="lName"
+              id="lName-update"
               type="text"
               required/>
           </p>
           <p>
             <label>First Name:</label>
             <input
-              id="fName"
+              id="fName-update"
               name="fName"
               type="text"
+              value=""
+              placeholder=""
               required
             />
           </p>
@@ -132,7 +138,7 @@
             <label>Birthdate:</label>
             <input
               name="birthdate"
-              id="birthdate"
+              id="birthdate-update"
               type="date"
               required/>
           </p>
@@ -141,12 +147,13 @@
             <select name="gradeLevel" id="gradeLevel">
               <option value="0">--Select from available Grade Levels--</option>
               {% for grade in grade_levels %}
-                  <option value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
+                  <option id="grade-update" value="{{ grade.gradeLevelID }}">{{ grade.gradeName }}</option>
               {% endfor %}
             </select>
           </p>
           <button type="submit" id="update_student">Update Student</button>
-        </div>
+        </form>
+      </div>
     </div>
   </body>
 </html>
