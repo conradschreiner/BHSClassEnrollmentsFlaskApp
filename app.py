@@ -81,7 +81,10 @@ class NoNumberNameInput(Exception):
 @app.route('/')
 def root():
     """Triggers the rendering of the homepage."""
-    return render_template("index.j2")
+    # load schema diagram for homepage
+    schema_image_file = url_for('static', filename='images/schema_webpage_layout.png')
+
+    return render_template("index.j2", schema_image_file=schema_image_file)
 
 
 @app.route("/students", methods=["GET", "POST"])
