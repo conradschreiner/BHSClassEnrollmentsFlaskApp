@@ -37,17 +37,13 @@
 {% endfor %}
       <fieldset>
         <legend><strong>Edit ClassSection Record</strong></legend>
-      <label>Course:
-          <select name="course" id="course">
-            <option value="0">--Select from available Courses--</option>
-            {% for course in courses %}
-                <option value="{{ course.courseID }}">{{ course.name }}</option>
-            {% endfor %}
-          </select>
-      </label>
+      <p>Modify the teacher for the above class section, which can be set to NULL or a different listed teacher.
+      If you would like to maintain the current teacher but update a different field, then select the "--Maintain current teacher--"
+      option on the teacher drop-down.</p>
       <label>Teacher:
           <select name="teacher" id="teacher">
             <option value="0">--Select from available Teachers--</option>
+            <option value="m">--Maintain current teacher--</option>
             {% for teacher in teachers %}
                 <option value="{{ teacher.teacherID }}">{{ teacher.fullName }}</option>
             {% endfor %}

@@ -81,7 +81,10 @@ class NoNumberNameInput(Exception):
 @app.route('/')
 def root():
     """Triggers the rendering of the homepage."""
-    return render_template("index.j2")
+    # load schema diagram for homepage
+    schema_image_file = url_for('static', filename='images/schema_webpage_layout.png')
+
+    return render_template("index.j2", schema_image_file=schema_image_file)
 
 
 @app.route("/students", methods=["GET", "POST"])
@@ -373,12 +376,12 @@ def update_classsection(id):
     if request.method == "GET":
         # retrieve all data for the given classSectionID
         select_id_query = """SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
-        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
-        cs.period AS "Period", cs.classroom as "Classroom", c.name as "Course Name",
-        CONCAT(t.fName, ' ', t.lName) AS "Teacher Name" -- including to better understand the NULLable foreign key
+        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate)) AS "School Year",
+        cs.period AS "Period", cs.classroom AS "Classroom", c.name AS "Course Name",
+        CONCAT(t.fName, ' ', t.lName) AS "Teacher Name"
         FROM `ClassSections` cs
-        INNER JOIN `Courses` c on cs.courseID = c.courseID
-        LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID
+        INNER JOIN `Courses` c ON cs.courseID = c.courseID
+        LEFT JOIN `Teachers` t ON cs.teacherID = t.teacherID
         WHERE cs.classSectionID = %s;"""
         class_section_id = (id,)
         data = run_select_params_query(select_id_query, class_section_id)
@@ -396,54 +399,38 @@ def update_classsection(id):
 
     if request.method == "POST":
         try:
-            course = request.form["course"]
             teacher = request.form["teacher"]
             period = request.form["period"]
             classroom = request.form["classroom"]
             start_date = request.form["startDate"]
             end_date = request.form["endDate"]
 
-            # dynamically build the update statement by storing the SET fields and values in lists based on request.form responses
-            update_fields = []
-            update_values = []
+            # store request responses as dictionary for filtering
+            field_dict = {"period": period, "classroom": classroom, "startDate": start_date, "endDate": end_date}
 
-            # if course response value is not "0" then include, if is 0 then exclude
-            if course != "0":
-                update_fields.append("courseID = %s")
-                update_values.append(course)
+            # filter dictionary to remove any pairs that contain an empty value
+            field_dict_filtered = {k: v for k, v in field_dict.items() if v != ""}
 
-            # if teacher response is not "0" then include request, if it is "0" then set to NULL
-            if teacher != "0":
-                update_fields.append("teacherID = %s")
-                update_values.append(teacher)
+            # dynamically create SET list from filtered dictionary
+            update_set_list = [f"{k} = %s" for k in field_dict_filtered.keys()]
+
+            # update to new teacher
+            if teacher != "0" and teacher != "m":
+                update_set_list.append("teacherID = %s")
+                update_values = list(field_dict_filtered.values()) + [teacher, id]
+
+            elif teacher == "m":
+                # exclude teacher field from update so that current one is maintained
+                update_values = list(field_dict_filtered.values()) + [id]
+
+            # set teacher to NULL - "NULLable" relationship
             else:
-                update_fields.append("teacherID = NULL")
+                update_set_list.append("teacherID = NULL")
+                update_values = list(field_dict_filtered.values()) + [id]
 
-            # if startDate response value is not "0" then include, if is 0 then exclude
-            if start_date != "0":
-                update_fields.append("startDate = %s")
-                update_values.append(start_date)
-
-            # if endDate response value is not "0" then include, if is 0 then exclude
-            if end_date != "0":
-                update_fields.append("endDate = %s")
-                update_values.append(end_date)
-
-            # if period response value is not "0" then include, if is 0 then exclude
-            if period != "0":
-                update_fields.append("period = %s")
-                update_values.append(period)
-
-            # if classroom response value is not "0" then include, if is 0 then exclude
-            if classroom != "0":
-                update_fields.append("classroom = %s")
-                update_values.append(classroom)
-
-            update_values.append(id)
-
-            update_query = f"UPDATE `ClassSections` SET {', '.join(update_fields)} WHERE classSectionID = %s;"
-
+            update_query = f"UPDATE `ClassSections` SET {', '.join(update_set_list)} WHERE classSectionID = %s;"
             run_change_query(update_query, update_values)
+
             return redirect("/classsections")
 
         except Exception as e:
