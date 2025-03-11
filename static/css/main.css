@@ -163,7 +163,7 @@ section {
     padding: 1%;
     margin: 1%;
     border: 1px solid var(--orange);
-      background-color: var(--navBack);
+      background-color: var(--white);
   }
     legend {}
   label {
@@ -171,8 +171,8 @@ section {
       display: inline-block;
   }
   button {
-      color: var(--black);
-      background-color: var(--white);
+      color: var(--orange);
+      background-color: var(--navBack);
        border: 1px solid var(--orange);
     padding: 0.5%;
       transition: background-color 0.3s, color 0.3s; /* ensure smooth transition when user hovers over buttons*/
