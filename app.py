@@ -106,7 +106,7 @@ def students():
         return render_template("students.j2", students=results_table, grade_levels=results_gl_dropdown)
     else:
         # display blank page with no data if the database has not been populated yet
-        return render_template("students_no_data.html")
+        return render_template("students_no_data.j2")
 
 
 @app.route('/students/create', methods=["POST"])
