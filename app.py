@@ -76,6 +76,18 @@ class NoNumberNameInput(Exception):
     def __str__(self):
         return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
+# exceptions
+class EmptyUpdateInput(Exception):
+    """Flagged if a user tries to enter numerical values on an insert in an invalid scenario.
+    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/"""
+
+    def __init__(self, message, error_code):
+        self.message = message
+        self.error_code = error_code
+        super().__init__(self.message, self.error_code)
+
+    def __str__(self):
+        return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
 # Routes
 @app.route('/')
@@ -430,24 +442,32 @@ def update_classsection(id):
             # dynamically create SET list from filtered dictionary
             update_set_list = [f"{k} = %s" for k in field_dict_filtered.keys()]
 
+            if not update_set_list:
+                raise EmptyUpdateInput("You did not select any fields to update which results in a MySQL 1064 error - please try again.", 400)
+
             # update to new teacher
-            if teacher != "0" and teacher != "m":
+            if teacher != "0" and teacher != "n":
                 update_set_list.append("teacherID = %s")
                 update_values = list(field_dict_filtered.values()) + [teacher, id]
 
-            elif teacher == "m":
+            # set teacher to NULL - "NULLable" relationship
+            elif teacher == "n":
+                update_set_list.append("teacherID = NULL")
                 # exclude teacher field from update so that current one is maintained
                 update_values = list(field_dict_filtered.values()) + [id]
 
-            # set teacher to NULL - "NULLable" relationship
+            # maintain teacher
             else:
-                update_set_list.append("teacherID = NULL")
                 update_values = list(field_dict_filtered.values()) + [id]
 
             update_query = f"UPDATE `ClassSections` SET {', '.join(update_set_list)} WHERE classSectionID = %s;"
             run_change_query(update_query, update_values)
 
             return redirect("/classsections")
+
+        except EmptyUpdateInput as e:
+            logging.error(f"Error updating classsection due to no fields being selected: {e}")
+            return str(e), e.error_code
 
         except Exception as e:
             logging.error(f"Error updating classsection: {e}")

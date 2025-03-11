@@ -43,7 +43,7 @@
       <label>Teacher:
           <select name="teacher" id="teacher">
             <option value="0">--Select from available Teachers--</option>
-            <option value="m">--Maintain current teacher--</option>
+            <option value="n">NULL</option>
             {% for teacher in teachers %}
                 <option value="{{ teacher.teacherID }}">{{ teacher.fullName }}</option>
             {% endfor %}
