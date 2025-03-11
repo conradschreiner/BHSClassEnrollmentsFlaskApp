@@ -103,7 +103,7 @@ section {
 
 }
 
-#update-modal{
+#update_modal{
   display: none;
   background-color: var(--orange);
   position: absolute;
