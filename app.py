@@ -264,6 +264,15 @@ def add_teacher():
             logging.error(f"Error adding teacher: {e}")
             return "There was an error adding the teacher.", 500
 
+@app.route("/teachers/delete/<int:id>")
+def delete_teacher(id):
+    delete_sql = "DELETE FROM `Teachers` WHERE teacherID = %s;"
+    delete_cursor = mysql.connection.cursor()
+    delete_cursor.execute(delete_sql, (id,))
+    mysql.connection.commit()
+    delete_cursor.close()
+    return redirect("/teachers")
+
 
 @app.route("/departments", methods=["POST", "GET"])
 def departments():
@@ -524,7 +533,7 @@ def add_enrollment():
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
 
-    port = int(os.environ.get('PORT', 3319))
+    port = int(os.environ.get('PORT', 3322))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
