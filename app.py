@@ -480,17 +480,15 @@ def enrollments():
     # load query from file and store as string variable
     enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
     student_names_query = read_sql_file(r"database/sql_storage/select_student_names.sql")
-    course_names_query = read_sql_file(r"database/sql_storage/select_course_names.sql")
-    teacher_names_query = read_sql_file(r"database/sql_storage/select_teacher_names.sql")
+    class_sections_query = read_sql_file(r"database/sql_storage/class_section_dropdown.sql")
 
     # run query and generate jinja template
     enrollments_table = run_select_query(enrollments_query)
     student_dropdown = run_select_query(student_names_query)
-    course_dropdown = run_select_query(course_names_query)
-    teacher_dropdown = run_select_query(teacher_names_query)
+    class_section_dropdown = run_select_query(class_sections_query)
 
     return render_template("enrollments.j2", enrollments=enrollments_table, students=student_dropdown,
-                           courses=course_dropdown, teachers=teacher_dropdown)
+                           class_sections=class_section_dropdown)
 
 
 @app.route("/enrollments/create", methods=["POST"])
@@ -499,17 +497,12 @@ def add_enrollment():
     if request.method == "POST":
         try:
             student = request.form["student"]
-            course = request.form["course"]
-            teacher = request.form["teacher"]
-            period = request.form["period"]
-            classroom = request.form["classroom"]
+            class_section = request.form["class_section"]
 
             insert_query = ("INSERT INTO `Enrollments` (studentID, classSectionID, enrolledDate)"
-                            "VALUES (%s, "
-                            "(SELECT classSectionID FROM `ClassSections` WHERE teacherID = %s AND courseID = %s AND period = %s AND classroom = %s),"
-                            "CURRENT_DATE);")
+                            "VALUES (%s, %s, CURRENT_DATE);")
 
-            insert_values = (student, teacher, course, period, classroom)
+            insert_values = (student, class_section)
 
             run_change_query(insert_query, insert_values)
 
