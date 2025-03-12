@@ -6,13 +6,12 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='/css/main.css') }}">
     <title>Students</title>
     <script>
-      function openUpdateModal(event, index, id, birthdate, fName, lName, grade) {
+      function openUpdateModal(event, id, birthdate, fName, lName, grade) {
         event.preventDefault(); 
         document.getElementById('fName_update').value = fName;
         document.getElementById('lName_update').value = lName;
         document.getElementById('birthdate_update').value = birthdate;
 
-        console.log(document.getElementById("gradeLevel_update").options);
         for (var i = 0; i < document.getElementById("gradeLevel_update").options.length; i++) {
           if (document.getElementById("gradeLevel_update").options[i].text == grade) {
             document.getElementById("gradeLevel_update").selectedIndex = `${i}`;
@@ -61,12 +60,12 @@
           {% endfor %}
             <td>
                 <a href="/students/delete/{{student.studentID}}">
-                  <button type='button'>remove</button>
+                  <button>remove</button>
                 </a>
             </td>
             <td>
                 <a href="">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" onclick="openUpdateModal(event, {{index}}, {{student["studentID"]}},'{{student["Birthdate"]}}', '{{student["First Name"]}}', '{{student["Last Name"]}}', '{{student["Grade Name"]}}')">
+                  <button onclick="openUpdateModal(event, {{student["studentID"]}},'{{student["Birthdate"]}}', '{{student["First Name"]}}', '{{student["Last Name"]}}', '{{student["Grade Name"]}}')">
                   update
                   </button>
                 </a>
@@ -138,8 +137,6 @@
                 id="fName_update"
                 name="fName_update"
                 type="text"
-                value=""
-                placeholder=""
                 required
               />
             </p>
