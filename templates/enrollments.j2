@@ -44,40 +44,27 @@
     <form name="add_enrollment" id="add_enrollment" action="/enrollments/create" method="POST">
       <fieldset>
         <legend><strong>Add Enrollment Record</strong></legend>
+      <div>
       <label>Student:
           <select name="student" id="student">
             <option value="0">--Select from available Students--</option>
             {% for student in students %}
-                <option value="{{ student.studentID }}">{{ student.fullName }}</option>
+                <option value="{{ student.studentID }}">{{ student.student_record }}</option>
             {% endfor %}
           </select>
       </label>
-      <label>Course:
-          <select name="course" id="course">
-            <option value="0">--Select from available Courses--</option>
-            {% for course in courses %}
-                <option value="{{ course.courseID }}">{{ course.name }}</option>
+      </div>
+      <div>
+      <label>Class Section:
+          <select name="class_section" id="class_section">
+            <option value="0">--Select from available Class Sections--</option>
+            {% for class in class_sections %}
+                <option value="{{ class.classSectionID }}">{{ class.ClassSection }}</option>
             {% endfor %}
           </select>
-      </label>
-      <label>Teacher:
-          <select name="teacher" id="teacher">
-            <option value="0">--Select from available Teachers--</option>
-            {% for teacher in teachers %}
-                <option value="{{ teacher.teacherID }}">{{ teacher.fullName }}</option>
-            {% endfor %}
-          </select>
-      </label>
-          <label for="period">Period Number: </label>
-          <input type="number" id="period" name="period" />
-        </div>
-        <div>
-          <label for="classroom">Classroom Number: </label>
-          <input type="number" id="classroom" name="classroom" />
-        </div>
-        <label>
-          <button type="submit" id="add_enrollment">Enroll Student</button>
         </label>
+      </div>
+      <button type="submit" id="add_enrollment">Enroll Student</button>
       </fieldset>
     </form>
       </section>
