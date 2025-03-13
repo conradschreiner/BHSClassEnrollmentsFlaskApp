@@ -38,26 +38,39 @@ mysql = MySQL(app)
 
 # reusable functions for sql execution tasks
 def run_select_query(query):
-    """Executes and returns a mysql select query against the configured database."""
+    """Executes and returns a mysql select query against the configured database.
+    Inspired by db_connector.py on the https://github.com/osu-cs340-ecampus/flask-starter-app
+    and referenced the MySQL python connector documentation heavily: https://dev.mysql.com/doc/connector-python/en/connector-python-reference.html.
+    However, the code itself was written by Conrad."""
     cursor = mysql.connection.cursor()
     cursor.execute(query)
     return cursor.fetchall()
 
 
 def run_select_params_query(query, values):
-    """Executes and returns a mysql select query against the configured database."""
+    """Executes and returns a mysql select query against the configured database.
+    Inspired by db_connector.py on the https://github.com/osu-cs340-ecampus/flask-starter-app
+    and referenced the MySQL python connector documentation heavily: https://dev.mysql.com/doc/connector-python/en/connector-python-reference.html.
+    However, the code itself was written by Conrad."""
+
+    # initialize database cursor
     cursor = mysql.connection.cursor()
+
+    # execute select query with the given parameters
     cursor.execute(query, values)
     return cursor.fetchall()
 
 
 def run_change_query(query, values):
-    """Executes and commits a mysql insert, update or delete query against the configured database."""
+    """Executes and commits a mysql insert, update or delete query against the configured database.
+    Inspired by db_connector.py on the https://github.com/osu-cs340-ecampus/flask-starter-app
+    and referenced the MySQL python connector documentation heavily: https://dev.mysql.com/doc/connector-python/en/connector-python-reference.html.
+    However, the code itself was written and implemented by Conrad."""
 
-    # initialize cursor
+    # initialize database cursor
     cursor = mysql.connection.cursor()
 
-    # execute given sql insert statement
+    # execute given sql insert, update or delete statement
     cursor.execute(query, values)
     mysql.connection.commit()
     cursor.close()
@@ -66,7 +79,9 @@ def run_change_query(query, values):
 # exceptions
 class NoNumberNameInput(Exception):
     """Flagged if a user tries to enter numerical values on an insert in an invalid scenario.
-    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/"""
+    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/
+    Also reference the official Python documentation her: https://docs.python.org/3/tutorial/errors.html
+    Written and implemented by Conrad."""
 
     def __init__(self, message, error_code):
         self.message = message
@@ -79,7 +94,9 @@ class NoNumberNameInput(Exception):
 # exceptions
 class EmptyUpdateInput(Exception):
     """Flagged if a user tries to enter numerical values on an insert in an invalid scenario.
-    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/"""
+    source: https://www.geeksforgeeks.org/define-custom-exceptions-in-python/
+    Also reference the official Python documentation her: https://docs.python.org/3/tutorial/errors.html
+    Written and implemented by Conrad."""
 
     def __init__(self, message, error_code):
         self.message = message
@@ -89,10 +106,18 @@ class EmptyUpdateInput(Exception):
     def __str__(self):
         return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
-# Routes
+# Routes - Note that we did away with the strategy proposed on the starter app using the db_connector.py.
+# The instructions seemed to jump back and forth between using it and not using it so we opted for implementing everything
+# within app.py. Instead of executing queries with db_connetor.py like is provided in the starter app, we found that
+# establishing the connection in the app itself, and then running the queries via run_select_query(), run_select_params_query()
+# and run_change_query() was more effective and consistent.
+
 @app.route('/')
 def root():
-    """Triggers the rendering of the homepage."""
+    """Triggers the rendering of the homepage.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing
+    """
     # load schema diagram for homepage
     schema_image_file = url_for('static', filename='images/schema_webpage_layout.png')
 
@@ -101,7 +126,10 @@ def root():
 
 @app.route("/students", methods=["GET", "POST"])
 def students():
-    """Route for Read functionality of Students Entity Page"""
+    """Route for Read functionality of Students Entity Page.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing
+    """
 
     # load read queries from file and store as string variable
     students_query = read_sql_file(r"database/sql_storage/select_all_students.sql")
@@ -123,15 +151,22 @@ def students():
 
 @app.route('/students/create', methods=["POST"])
 def add_student():
-    """Creates a new student record in the database."""
+    """Creates a new student record in the database.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
+
     # add student insert functionality
     if request.method == "POST":
         try:
+            # get the input parameters provided by the user
             first_name = request.form["fName"]
             last_name = request.form["lName"]
             birthdate = request.form["birthdate"]
             grade_level = request.form["gradeLevel"]
 
+            # prevent the user from using a numerical character in the first name or last name fields
             if contains_number(first_name) or contains_number(last_name):
                 raise NoNumberNameInput("Numerical characters not allowed in student first name or last name.", 400)
 
@@ -196,17 +231,25 @@ def gradelevels():
 
 @app.route("/gradelevels/create", methods=["POST"])
 def add_grade_level():
-    """Creates a new GradeLevel record in the database with the given user input"""
+    """Creates a new GradeLevel record in the database with the given user input
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
+
     if request.method == "POST":
         try:
+            # get the input parameters provided by the user
             grade_name = request.form["gradeName"]
             grade_num = request.form["gradeNum"]
 
+            # prevent the user from using a numerical character in the grade level name
             if contains_number(grade_name):
                 raise NoNumberNameInput("Numerical characters not allowed in GradeLevel name.", 400)
 
             insert_query = ("INSERT INTO `GradeLevels` (gradeName, gradeNumber)"
                             "VALUES (%s, %s);")
+
             insert_values = (grade_name, grade_num)
 
             run_change_query(insert_query, insert_values)
@@ -224,7 +267,10 @@ def add_grade_level():
 
 @app.route("/teachers", methods=["POST", "GET"])
 def teachers():
-    """Route CRUD methods to the Teachers Entity Page"""
+    """Route CRUD methods to the Teachers Entity Page.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    """
 
     # load query from file and store as string variable
     teachers_query = read_sql_file(r"database/sql_storage/select_all_teachers.sql")
@@ -237,13 +283,19 @@ def teachers():
 
 @app.route("/teachers/create", methods=["POST"])
 def add_teacher():
-    """Creates a new teacher record in the database with the given user input"""
+    """Creates a new teacher record in the database with the given user input.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
     if request.method == "POST":
         try:
+            # get the input parameters provided by the user
             first_name = request.form["fName"]
             last_name = request.form["lName"]
             birthdate = request.form["birthdate"]
 
+            # prevent the user from using a numerical character in the first name or last name fields
             if contains_number(first_name) or contains_number(last_name):
                 raise NoNumberNameInput("Numerical characters not allowed in first name or last name.", 400)
 
@@ -252,6 +304,7 @@ def add_teacher():
 
             insert_values = (first_name, last_name, birthdate)
 
+            # execute the query with values, commit and close connection
             run_change_query(insert_query, insert_values)
 
             return redirect("/teachers")
@@ -276,7 +329,10 @@ def delete_teacher(id):
 
 @app.route("/departments", methods=["POST", "GET"])
 def departments():
-    """Route CRUD methods to the Departments Entity Page"""
+    """Route CRUD methods to the Departments Entity Page
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    """
 
     # load query from file and store as string variable
     departments_query = read_sql_file(r"database/sql_storage/select_all_departments.sql")
@@ -298,6 +354,7 @@ def add_department():
             insert_query = ("INSERT INTO `Departments` (subjectArea)"
                             "VALUES (%s);")
 
+            # execute the query with values, commit and close connection
             run_change_query(insert_query, (subject_area,))
 
             return redirect("/departments")
@@ -343,6 +400,7 @@ def add_course():
 
             insert_values = (grade_level, course_name, department)
 
+            # execute the query with values, commit and close connection
             run_change_query(insert_query, insert_values)
 
             return redirect("/courses")
@@ -354,7 +412,10 @@ def add_course():
 
 @app.route("/classsections", methods=["POST", "GET"])
 def classsections():
-    """Route CRUD methods to the ClassSections Entity Page"""
+    """Route CRUD methods to the ClassSections Entity Page
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    """
 
     # load query from file and store as string variable
     class_sections_query = read_sql_file(r"database/sql_storage/select_all_classsections.sql")
@@ -372,7 +433,11 @@ def classsections():
 
 @app.route("/classsections/create", methods=["POST"])
 def add_classsection():
-    """Creates a new classsection record in the database with the given user input"""
+    """Creates a new classsection record in the database with the given user input
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
     if request.method == "POST":
         try:
             course = request.form["course"]
@@ -390,7 +455,10 @@ def add_classsection():
 
                 insert_values = (course, start_date, end_date, period, classroom)
 
+                # execute the query with values, commit and close connection
                 run_change_query(insert_query, insert_values)
+
+            # every scenario where the teacherID is NOT NULL
             else:
                 insert_query = (
                     "INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)"
@@ -398,6 +466,7 @@ def add_classsection():
 
                 insert_values = (course, teacher, start_date, end_date, period, classroom)
 
+                # execute the query with values, commit and close connection
                 run_change_query(insert_query, insert_values)
 
             return redirect("/classsections")
@@ -409,8 +478,14 @@ def add_classsection():
 
 @app.route('/classsections/update/<int:id>', methods=["GET", "POST"])
 def update_classsection(id):
-    """Prompts the user to edit the given classsection record on the row of the table."""
+    """Prompts the user to edit the given classsection record on the row of the table.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
+
     if request.method == "GET":
+
         # retrieve all data for the given classSectionID
         select_id_query = """SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
         CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate)) AS "School Year",
@@ -420,7 +495,11 @@ def update_classsection(id):
         INNER JOIN `Courses` c ON cs.courseID = c.courseID
         LEFT JOIN `Teachers` t ON cs.teacherID = t.teacherID
         WHERE cs.classSectionID = %s;"""
+
+        # store given classSectionID from the user's choice
         class_section_id = (id,)
+
+        # run query and return the results of the given class section record data
         data = run_select_params_query(select_id_query, class_section_id)
 
         # drop down queries
@@ -486,14 +565,18 @@ def update_classsection(id):
 def enrollments():
     """Route CRUD methods to the Enrollments Entity Page"""
 
-    # load query from file and store as string variable
+    # load queries from files and store as string variables
     enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
     student_names_query = read_sql_file(r"database/sql_storage/select_student_names.sql")
     class_sections_query = read_sql_file(r"database/sql_storage/class_section_dropdown.sql")
 
-    # run query and generate jinja template
+    # run queries and generate jinja templates
     enrollments_table = run_select_query(enrollments_query)
+
+    # this dynamic drop down contains student name and grade level name
     student_dropdown = run_select_query(student_names_query)
+
+    # this dynamic dropdown contains all relevant class section fields so the user can make an accurate choice
     class_section_dropdown = run_select_query(class_sections_query)
 
     return render_template("enrollments.j2", enrollments=enrollments_table, students=student_dropdown,
@@ -502,9 +585,15 @@ def enrollments():
 
 @app.route("/enrollments/create", methods=["POST"])
 def add_enrollment():
-    """Creates a new enrollment record in the database with the given user input"""
+    """Creates a new enrollment record in the database with the given user input.
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    """
+
     if request.method == "POST":
         try:
+            # get user input
             student = request.form["student"]
             class_section = request.form["class_section"]
 
