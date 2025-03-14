@@ -8,7 +8,8 @@ FROM `GradeLevels` gl
 ORDER BY gl.gradeLevelID;
 
 -- Students webpage table query that we plan to use for student page to show grade level foreign key join
-SELECT s.studentID, s.lName AS "Last Name", s.fName AS "First Name", s.birthdate AS "Birthdate", s.gradeLevelID, gl.gradeName AS "Grade Name"
+SELECT s.studentID, s.lName AS "Last Name", s.fName AS "First Name", s.birthdate AS "Birthdate",
+       gl.gradeNumber AS "Grade Number", gl.gradeName AS "Grade Name"
 FROM `Students` s
          INNER JOIN `GradeLevels` gl ON  s.gradeLevelID = gl.gradelevelID
 ORDER BY s.studentID; -- going to go with order by PK for now on every table query
@@ -36,25 +37,26 @@ ORDER BY c.courseID;
 -- classSections webpage table query - includes foreign key joins on Courses and Teachers for uses visibility
 SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
-       cs.period AS "Period", cs.classroom as "Classroom", c.courseID, c.name as "Course Name",
-       t.teacherID, CONCAT(t.fName, ' ', t.lName) AS "Teacher Name"
+       cs.period AS "Period", cs.classroom as "Classroom", c.name as "Course Name", gl.gradeName as "Course Grade Name",
+       CONCAT(t.fName, ' ', t.lName) AS "Teacher Name" -- including to better understand the NULLable foreign key
 FROM `ClassSections` cs
 INNER JOIN `Courses` c on cs.courseID = c.courseID
+INNER JOIN `GradeLevels` gl on c.gradeLevelID = gl.gradeLevelID
 LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID -- to account for NULL and/or "NULLed" Teachers
 ORDER BY cs.classSectionID;
 
-
-
 -- Enrollments table Query - includes foreign key joins plus addition joins from ClassSection to show the details of the given ClassSection record (needed for accurately inserting enrollments)
-SELECT e.enrollmentID, e.enrolledDate as "Date Student Enrolled", e.studentID,
+SELECT e.enrollmentID, e.enrolledDate as "Date Student Enrolled",
        CONCAT(s.fName, ' ', s.lName) AS "Enrolled Student Name",
-       cs.classSectionID, cs.period AS "Period", cs.classroom AS "Classroom",
+       cs.period AS "Period", cs.classroom AS "Classroom",
        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
-       c.name AS "Course Name", CONCAT(t.fName, ' ', t.lName) AS "ClassSection's Teacher Name"
+       c.name AS "Course Name", gl.gradeName as "Course Grade Name",
+       CONCAT(t.fName, ' ', t.lName) AS "ClassSection's Teacher Name"
 FROM `Enrollments` e
 INNER JOIN `Students` s ON e.studentID = s.studentID
 INNER JOIN `ClassSections` cs ON e.classSectionID = cs.classSectionID
 INNER JOIN `Courses` c ON c.courseID = cs.courseID
+INNER JOIN `GradeLevels` gl ON c.gradeLevelID = gl.gradeLevelID
 LEFT JOIN `Teachers` t ON cs.teacherID = t.teacherID -- to account for NULL and/or "NULLed" Teachers
 ORDER BY e.enrollmentID;
 
@@ -62,21 +64,12 @@ ORDER BY e.enrollmentID;
 -- insert statements - user will have dropdown options for each foreign key (using a relevant attribute)
 -- --------------------------------------------------------------------------------------------------------
 -- gradelevels - designed to not be manipulated, but included due to project requirements
-INSERT INTO `Gradelevels` (gradeName, gradeNumber)
-VALUES (
-        :gradeNameInput, -- basic text input field
-        :gradeNumberInput -- basic text input field
-       );
+INSERT INTO `GradeLevels` (gradeName, gradeNumber)
+VALUES (%s, %s);
 
 -- students
-INSERT INTO `Students`
-(`gradeLevelID`, `fName`, `lName`, `birthdate`) -- for gradeLevel, user will only be able to from available GradeLevel.gradeName(s)
-VALUES (
-        :gradeLevelID, -- obtained from dynamic dropdown
-        :fNameInput,  -- text box iput
-        :lNameInput, -- text box input
-        :birthdateInput -- date select input
-);
+INSERT INTO `Students` (gradeLevelID, fName, lName, birthdate)
+VALUES (%s, %s, %s, %s);
 
 -- select gradeNames for gradeLevelID FK dropdown - only the gradeName is displayed. The ID is used behind the scenes for the <options> values.
 SELECT gradeLevelID, gradeName -- This also allows for the FK to be used directly in the INSERT instead of a subquery
@@ -84,139 +77,89 @@ SELECT gradeLevelID, gradeName -- This also allows for the FK to be used directl
 
 -- Teachers
 INSERT INTO `Teachers` (fName, lName, birthdate)
-VALUES (
-        :fNameInput, -- text box input
-        :lNameInput, -- text box input
-        :birthdateInput -- date select input
-       );
+VALUES (%s, %s, %s);
 
 -- department
 INSERT INTO `Departments` (subjectArea)
-VALUES (
-        :subjectAreaInput -- basic text input field
-       );
+                            VALUES (%s);
 
 -- Courses
 INSERT INTO `Courses` (gradeLevelID, name, departmentID)
-VALUES (
-        (SELECT gradeLevelID FROM `GradeLevels` WHERE gradeNumber = :gradeNumber),
-        :nameInput, -- text box input
-        (SELECT departmentID FROM `Departments` WHERE subjectArea = :subjectArea)
-       );
+VALUES (%s, %s, %s);
 
 -- select gradeNames for gradeLevelID FK dropdown - only the gradeName is displayed. The ID is used behind the scenes for the <options> values.
 SELECT gradeLevelID, gradeName -- This also allows for the FK to be used directly in the INSERT instead of a subquery
     FROM `GradeLevels`;
 
 -- select subjectAreas for departmentID FK dropdown
-SELECT subjectArea -- :subjectArea options
+SELECT subjectArea
 FROM Departments;
 
 -- classSections
 INSERT INTO `ClassSections` (courseID, teacherID, startDate, endDate, period, classroom)
-VALUES (
-        (SELECT courseID FROM `Courses` WHERE name = :courseName),
-        (SELECT teacherID FROM `Teachers` WHERE CONCAT(fName, ' ', lName) = :teacherFullName), -- derived FROM subquery ON  backend - dynamic dropdown list for user
-        :startDateInput, -- date input field
-        :endDateInput, -- date input field
-        :periodInput, -- static drop down list of available periods
-        :classroomInput -- static drop down of available classrooms
-       );
+VALUES (%s, NULL, %s, %s, %s, %s);
+
 
 -- select course names for dropdown on classSectionID FK
 SELECT name -- :courseName --options
 FROM `Courses`;
 
 -- select full teacher names for the class section teacherID FK
-SELECT CONCAT(fName, ' ', lName) -- :teacherFullName option
-FROM `Teachers`;
+SELECT teacherID, CONCAT(fName, ' ', lName) as "fullName" FROM `Teachers`;
 
 -- enrollments
 INSERT INTO `Enrollments` (studentID, classSectionID, enrolledDate)
-VALUES ( -- subquery to find studentID based on dropdown selection - student full name
-        (SELECT studentID FROM `Students` WHERE CONCAT(fName, ' ', lName) = :studentFullName),
-        ( -- subquery to find classSectionID based on dropdown selections - teacher full name and course name
-        SELECT classSectionID
-        FROM `ClassSections`
-        WHERE teacherID = (SELECT teacherID FROM `Teachers` WHERE CONCAT(fName, ' ', lName) = :teacherFullName)
-        AND courseID = (SELECT courseID FROM `Courses` WHERE name = :courseName)                                                ),
-        CURRENT_DATE
-       );
+VALUES (%s, %s, CURRENT_DATE);
 
--- select full student name for dropdown on studentID FK
-SELECT CONCAT(fName, ' ', lName) -- :studentFullName
-FROM `Students`;
+-- select full student name for dropdown on studentID FK - also include student grade level
+SELECT s.studentID, CONCAT(CONCAT(s.fName, ' ', s.lName), ', ', gl.gradeName) as student_record
+FROM `Students` s
+INNER JOIN `GradeLevels` gl on s.gradeLevelID = gl.gradeLevelID;
 
--- select ClassSection.teacherID for dropdown on classSectionID FK
-SELECT CONCAT(fName, ' ', lName) -- :teacherFullName option
-FROM `Teachers`;
-
--- select ClassSection.courseID for dropdown on classSectionID FK
-SELECT name -- :courseName --options
-FROM `Courses`;
+-- select relevant ClassSection data to be displayed for dropdown on classSectionID FK
+SELECT cs.classSectionID, CONCAT(gl.gradeName, ' ', c.name, ' with ', IFNULL(CONCAT(t.fName, ' ', t.lName), 'no teacher yet assigned'),
+    ' Classroom ', cs.classroom, ', Period ', cs.period,  ', ', CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))) as ClassSection
+FROM `ClassSections` cs
+INNER JOIN `Courses` c on cs.courseID = c.courseID
+INNER JOIN `GradeLevels` gl on c.gradeLevelID = gl.gradeLevelID
+LEFT JOIN `Teachers` t on cs.teacherID = t.teacherID -- to account for NULL and/or "NULLed" Teachers
+ORDER BY cs.classSectionID;
 
 
 -- -----------------
 -- Update Statements
 -- -----------------
 
--- the foreign key teacherID ON classSections to NULL, to achieve the requirement of removing a relationship
-UPDATE `ClassSections`
-SET
-    courseID = (SELECT courseID FROM `Courses` WHERE name = :courseName),
-    teacherID = (SELECT teacherID FROM `Teachers` WHERE CONCAT(fName, ' ', lName) = :teacherFullName),
-    startDate = :startDate,
-    endDate = :endDate,
-    period = :period,
-    classroom = :classroom
-WHERE
-    classSectionID = :classSectionIDInput -- this will be applied via a row by row "edit" button on the table - ideally a popup window for dropdowns
-;
+-- UPDATE ClassSections
+-- The Python function in app.py update_classsection(id) dynamically creates the update statements based on user input.
+-- This dynamic enables update statements that only include the fields that the user entered in the SET clause, which results in more efficient queries that 
+-- are not executing redundant updates that set a field to the same value it was already listed as.
+-- the foreign key teacherID on ClassSections can be set to NULL here via a dropdown option, to achieve the requirement of removing a relationship aka "NULLable"
+-- {', '.join(update_set_list)} fills the SET clause with the fields the USER wants to update, such as teacherID = NULL, period = 1, etc.
 
--- select full teacher names for the class section teacherID FK - ideally can store these in a list and add NULL as option
-SELECT CONCAT(fName, ' ', lName) -- :teacherFullName option
-FROM `Teachers`;
+UPDATE `ClassSections` SET {', '.join(update_set_list)} WHERE classSectionID = %s;
 
--- select ClassSection.courseID for dropdown on classSectionID FK
-SELECT name -- :courseName --options
-FROM `Courses`;
+-- select classSectionID from the row where the user clicked the button
+SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
+        CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate)) AS "School Year",
+        cs.period AS "Period", cs.classroom AS "Classroom", c.name AS "Course Name",
+        CONCAT(t.fName, ' ', t.lName) AS "Teacher Name"
+        FROM `ClassSections` cs
+        INNER JOIN `Courses` c ON cs.courseID = c.courseID
+        LEFT JOIN `Teachers` t ON cs.teacherID = t.teacherID
+        WHERE cs.classSectionID = %s;
+
+
+-- UPDATE Students
+UPDATE `Students` SET lName = %s, fName = %s, birthdate = %s, gradeLevelID = %s WHERE studentID = %s;
 
 -- -----------------
 -- Delete Statements
 -- -----------------
 
+-- DELETE Students
 -- removes a chosen student FROM the database - note that delete cascade is implemented ON enrollments
-DELETE
-FROM `Students`
-WHERE
-    studentID = :studentID -- this will be applied via a row by row "remove" button on the table
-;
+DELETE FROM `Students` WHERE studentID = %s;
 
--- ------------------------------------------------------------------------------------------------------------------------------------
--- Data Queries to show relationships and a more comprehensive view of the database - not sure if these are going to be implemented yet
--- ------------------------------------------------------------------------------------------------------------------------------------
-
--- Registrar Query - an overall view of all enrollments of students in class sections - registrar.html
--- SELECT c.name AS "Course Name", concat(t.fName, ' ', t.lName) AS "Teacher Name",
---          cs.classroom AS "Classroom", cs.period AS "Period",
---          CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate))AS "School Year",
---          s.fName AS "Student First Name", s.lName AS "Student Last Name"
---   FROM `ClassSections` cs
---            INNER JOIN `Teachers` t ON  cs.teacherID = t.teacherID
---            INNER JOIN `Enrollments` e ON  cs.classSectionID = e.classSectionID
---            INNER JOIN `Students` s ON  e.studentID = s.studentID
---            INNER JOIN `Courses` c ON  cs.courseID = c.courseID
---   ORDER BY cs.endDate desc, c.courseID, cs.classSectionID, s.studentID
--- ;
--- 
--- -- Course Catalog Query - an overall view of all Courses and their class sections - courseCatalog.html
--- SELECT d.subjectArea AS "Department Subject Area", c.name  AS "Course Name",
---        gl.gradeName AS "Grade Name", gl.gradeNumber AS "Grade Number"
--- FROM `Courses` c
---          INNER JOIN `Departments` d ON  c.departmentID = d.departmentID
---          INNER JOIN `Gradelevels` gl ON  c.gradeLevelID = gl.gradeLevelID
--- ORDER BY gl.gradeNumber, d.departmentID, c.courseID
--- ;
-
-
-
+-- DELETE Teachers
+DELETE FROM `Teachers` WHERE teacherID = %s;
