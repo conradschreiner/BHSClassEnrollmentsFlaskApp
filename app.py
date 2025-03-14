@@ -345,7 +345,10 @@ def departments():
 
 @app.route("/departments/create", methods=["POST"])
 def add_department():
-    """Creates a new department record in the database with the given user input"""
+    """Creates a new department record in the database with the given user input
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    """
 
     if request.method == "POST":
         try:
@@ -366,7 +369,10 @@ def add_department():
 
 @app.route("/courses", methods=["POST", "GET"])
 def courses():
-    """Route CRUD methods to the Courses Entity Page"""
+    """Route CRUD methods to the Courses Entity Page
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    """
 
     # load query from file and store as string variable
     courses_query = read_sql_file(r"database/sql_storage/select_all_courses.sql")
