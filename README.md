@@ -3,7 +3,8 @@
 Below is a description of how to install, configure, and use this web application. It utilizes a MySQL database
 for data storage and manipulation, and uses Python's Flask library to interface and interact with said database.
 This app was developed by Conrad Schreiner and Iris Schwartz as the final project for CS340 Intro to
-Databases at Oregon State University.
+Databases at Oregon State University. The project is uses the standard Flask file and directory structure. The templates contains
+all of the html style Jinja templates which are used to render the web pages of the application using Flask. The static directory contains both the main.css in a folder titled css, and the images folder contains an image of the database schema model. The database directory houses the sql_storage folder where the DDL.sql, DML.sql and invidual SQL file used for CRUD operations are stored. In the root of the project directory, app.py is the primary file that runs the application, containing the database connection configuration and CRUD operations for interacting with the database. There are also two custom Python files in the root directory that were written by Conrad and are used within app.py. The requirements.txt, which is used to document the required Python libraries is stored in the root of the project as well as the .gitignore file that is used to excluded specific files and folders from git (such as the virtual envirnonment .venv, the .env, IDE cached files, etc.)
 
 ## Citation
 This app was largely adapted from the [osu-cs340-ecampus /flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app)
