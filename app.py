@@ -24,10 +24,10 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # configure app to our db
-app.config["host"] = os.environ.get("host")  # replace with your database URL
-app.config["user"] = os.environ.get("user")  # replace with your database username
-app.config["passwd"] = os.environ.get("passwd")  # replace with your database password
-app.config["db"] = os.environ.get("db")
+app.config['MYSQL_HOST'] = os.environ.get("host")  # replace with your database URL
+app.config['MYSQL_USER'] = os.environ.get("user")  # replace with your database username
+app.config['MYSQL_PASSWORD'] = os.environ.get("passwd")  # replace with your database password
+app.config['MYSQL_DB'] = os.environ.get("db")
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 # set logger to debug mode for testing purposes messages
