@@ -426,7 +426,7 @@ def classsections():
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
     Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
     specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
-    The SQLs that populate the dropsoqns were written by Conrad. 
+    The SQLs that populate the dropdowns were written by Conrad. 
     """
 
     # load query from file and store as string variable
