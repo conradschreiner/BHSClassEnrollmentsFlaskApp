@@ -1,3 +1,11 @@
+-- -------------------------------------------------------------------------------------------------------------
+-- Citation
+-- Unless otherwise noted, all SQL queries were written by our team using the MySQL documentation for reference.
+-- https://dev.mysql.com/doc/refman/9.2/en/sql-statements.html
+-- For the use of CONCAT in SELECT statements, this website was used for reference: https://www.mysqltutorial.org/mysql-string-functions/mysql-concat/
+-- MySQL documentation for IFNULL() used in the ClassSections table SELECT query https://dev.mysql.com/doc/refman/8.0/en/flow-control-functions.html#function_ifnull
+-- -------------------------------------------------------------------------------------------------------------
+
 -- ---------------------------------------------------
 -- Queries used to grab all data FROM each given table
 -- ---------------------------------------------------
@@ -139,7 +147,7 @@ ORDER BY cs.classSectionID;
 
 UPDATE `ClassSections` SET {', '.join(update_set_list)} WHERE classSectionID = %s;
 
--- select classSectionID from the row where the user clicked the button
+-- select classSectionID from the row where the user clicks the button
 SELECT cs.classSectionID, cs.startDate AS "Class Start Date", cs.endDate AS "Class End Date",
         CONCAT(YEAR(cs.startDate), '-', YEAR(cs.endDate)) AS "School Year",
         cs.period AS "Period", cs.classroom AS "Classroom", c.name AS "Course Name",
