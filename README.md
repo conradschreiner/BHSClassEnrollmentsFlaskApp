@@ -3,9 +3,11 @@
 Below is a description of how to install, configure, and use this web application. It utilizes a MySQL database
 for data storage and manipulation, and uses Python's Flask library to interface and interact with said database.
 This app was developed by Conrad Schreiner and Iris Schwartz as the final project for CS340 Intro to
-Databases at Oregon State University. The initial inspiration for this app was from the [flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app)
+Databases at Oregon State University. This app was largely adapted from the [osu-cs340-ecampus /flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app)
 GitHub repository that was provided by the TA's. Even though we borrowed much from the starter app,
-a large portion of this project was developed organically by our team. It should also be noted that I used this GitHub repository for reference while writing this readme documentation: [markdown-cheatsheet](https://github.com/im-luka/markdown-cheatsheet).
+a large portion of this project was developed organically by our team. For example, we dropped the `db_connector.py` file completely and instead opted for configuring the connecting in app.py. 
+It should also be noted that I used this GitHub repository for reference while writing this readme documentation: [markdown-cheatsheet](https://github.com/im-luka/markdown-cheatsheet).
+Unless otherwise noted, the SQL queries were written by our team - often using the official MySQL documentation for reference: [MySQL 9.2 Reference Manual Chapter 15 SQL Statements](https://dev.mysql.com/doc/refman/9.2/en/sql-statements.html).
 
 ## Table of Contents
 
@@ -174,7 +176,8 @@ This step will differ depending on your installation method.
 
 #### Home Page
 
-- Basic homepage containing brief descriptions of each webpage on the webapp. We also included the Schema model for reference while engaging with the webapps CRUD functionality. At the top of home and every other page, there are navidation buttons the can be used to access each page of the web app.
+- Basic homepage containing brief descriptions of each webpage on the webapp. We also included the Schema model for reference while engaging with the webapps CRUD functionality. At the top of home and every other page, there are navigation buttons the can be used to access each page of the web app. All for the webpages use Jinja templates that are rendered via the Flask library. These templates were adapted from both the [osu-cs340-ecampus /flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app),the official [Jinja template decoumenation](https://jinja.palletsprojects.com/en/stable/templates/), and the official 
+[Flask documentation](https://flask.palletsprojects.com/en/stable/). 
 
 #### Grade Levels Page
 

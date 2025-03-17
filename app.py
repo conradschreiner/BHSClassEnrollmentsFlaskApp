@@ -372,6 +372,9 @@ def courses():
     """Route CRUD methods to the Courses Entity Page
     Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
+    specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
+    The SQLs that populate the dropsoqns were written by Conrad. 
     """
 
     # load query from file and store as string variable
@@ -421,6 +424,9 @@ def classsections():
     """Route CRUD methods to the ClassSections Entity Page
     Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
+    specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
+    The SQLs that populate the dropsoqns were written by Conrad. 
     """
 
     # load query from file and store as string variable
@@ -488,6 +494,9 @@ def update_classsection(id):
     Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
     Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
+    specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
+    The SQLs that populate the dropsoqns were written by Conrad. 
     """
 
     if request.method == "GET":
@@ -569,7 +578,13 @@ def update_classsection(id):
 
 @app.route("/enrollments", methods=["POST", "GET"])
 def enrollments():
-    """Route CRUD methods to the Enrollments Entity Page"""
+    """Route CRUD methods to the Enrollments Entity Page
+    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
+    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+    Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
+    specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
+    The SQLs that populate the dropsdowns were written by Conrad. 
+    """
 
     # load queries from files and store as string variables
     enrollments_query = read_sql_file(r"database/sql_storage/select_all_enrollments.sql")
@@ -592,8 +607,7 @@ def enrollments():
 @app.route("/enrollments/create", methods=["POST"])
 def add_enrollment():
     """Creates a new enrollment record in the database with the given user input.
-    Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
-    Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+
     Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
     """
 
