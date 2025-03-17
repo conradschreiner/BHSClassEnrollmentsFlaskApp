@@ -1,14 +1,13 @@
  <!-- 
  Citation of idea to make update button trigger a JavaScript function when clicked (onclick="openUpdateModal()") that displays the previously hidden update_form via CSS property value change (document.document.getElementById('update_modal').style.display = "block") and a close button on the modal to trigger a JavaScript function when clicked (onclick="closeUpdateModal()") that hides the modal (document.getElementById('update_modal').style.display = "none"). 
  Date: 3/16/2025
- Adapted from Create a Modal and Modal Image Gallery Sections of W3.CSS Modal page
+ Originality: Adapted by Iris from Create a Modal and Modal Image Gallery Sections of W3.CSS Modal page
  Source URL: https://www.w3schools.com/w3css/w3css_modal.asp
  --> 
 
  <!--
- Note: having current values of attributes of a record as default values in input fields of update modal's update form by making them parameters of the openUpdateModal function when update button clicked and setting the value attribute of the appropriate input fields to those parameters was this group's original idea. 
+ Iris thought of and implemented setting current values of attributes of a record as default values in input fields of update modal's update form by making them parameters of the openUpdateModal function when update button clicked and setting the value attribute of the appropriate input fields to those parameters. 
  -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -23,7 +22,7 @@
         document.getElementById('lName_update').value = lName;
         document.getElementById('birthdate_update').value = birthdate;
 
-        <-- TA Quinn Downey gave me the idea to show current selected dropdown option by default in update form by looping through grade levels and setting selectedIndex of HTML option based on whether the text of current option matched the grade parameter. TA Quinn Downey also suggested I use event.preventDefault() to prevent the students page from being reloaded and hiding the update modal right after the update button is clicked. TA Alena Makarova helped with debugging this loop and figurring out that grade needed to be compared to options[i].text not options[i]. --> 
+        <-- TA Quinn Downey gave Iris the idea to show current selected dropdown option by default in update form by looping through grade levels and setting selectedIndex of HTML option based on whether the text of current option matched the grade parameter. TA Quinn Downey also suggested Iris use event.preventDefault() to prevent the students page from being reloaded and hiding the update modal right after the update button is clicked.  --> 
 
         for (var i = 0; i < document.getElementById("gradeLevel_update").options.length; i++) {
           if (document.getElementById("gradeLevel_update").options[i].text == grade) {

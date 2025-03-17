@@ -10,8 +10,10 @@ from flask_mysqldb import MySQL
 from flask import request
 from read_sql_file import read_sql_file
 from contains_number import contains_number
+from start_date_before_end_date import start_date_before_end_date
 import logging
 from dotenv import load_dotenv, find_dotenv
+import datetime
 
 # Load our environment variables from the .env file in the root of our project. - per starter-app 
 load_dotenv(find_dotenv())
@@ -103,6 +105,17 @@ class EmptyUpdateInput(Exception):
         self.error_code = error_code
         super().__init__(self.message, self.error_code)
 
+    def __str__(self):
+        return f"{self.message} (HTTPS Error Code: {self.error_code})"
+# exceptions
+class StartDateLaterThanEndDate(Exception):
+    '''Exception if user tries to submit a class section start date that is later than the class section end date
+    Iris used Conrad's code from his EmptyUpdateInput and NoNumberNameInput classes which he based off of https://www.geeksforgeeks.org/define-custom-exceptions-in-python/
+    Implemented by Iris'''
+    def __init__(self, message, error_code):
+        self.message = message
+        self.error_code = error_code
+        super().__init__(self.message, self.error_code)
     def __str__(self):
         return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
@@ -443,6 +456,7 @@ def add_classsection():
     Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
     Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    Iris added a check of whether end date was after start date, raising an exception otherwise. 
     """
     if request.method == "POST":
         try:
@@ -452,6 +466,10 @@ def add_classsection():
             classroom = request.form["classroom"]
             start_date = request.form["startDate"]
             end_date = request.form["endDate"]
+
+            #raise custom exception if start date selected is before end date selected
+            if  not start_date_before_end_date(start_date, end_date): 
+                raise StartDateLaterThanEndDate("The end date of a class section has to be later than the start date.", 400)
 
             # allow for teacher to be null
             if teacher == "0":
@@ -487,7 +505,14 @@ def update_classsection(id):
     """Prompts the user to edit the given classsection record on the row of the table.
     Followed the template guidelines set by the starter app https://github.com/osu-cs340-ecampus/flask-starter-app?tab=readme-ov-file#step-4---templates.
     Also referenced the Flask "Quickstart" documentation heavily: https://flask.palletsprojects.com/en/stable/quickstart/#routing.
+
     Conrad implemented the try and except blocks to handle errors more gracefully so that they don't crash the app.
+    
+    Iris added a check of whether end date was after start date, raising an exception otherwise. 
+
+    Drop-down functionality was adapted from @mlapresta's original repo that the flask starter app heavily borrows from, 
+    specifically the people.html file where the dropdown for certificates is implemented: https://github.com/mlapresta/cs340_starter_app/blob/master/starter_website/templates/people.html
+    The SQLs that populate the dropsoqns were written by Conrad. 
     """
 
     if request.method == "GET":
@@ -536,6 +561,10 @@ def update_classsection(id):
             # dynamically create SET list from filtered dictionary
             update_set_list = [f"{k} = %s" for k in field_dict_filtered.keys()]
 
+            #
+            if  not start_date_before_end_date(start_date, end_date): 
+                raise StartDateLaterThanEndDate("The end date of a class section has to be later than the start date.", 400)
+
             if not update_set_list:
                 raise EmptyUpdateInput("You did not select any fields to update which results in a MySQL 1064 error - please try again.", 400)
 
@@ -559,6 +588,7 @@ def update_classsection(id):
 
             return redirect("/classsections")
 
+        #raise custom exception if start date selected is before end date selected
         except EmptyUpdateInput as e:
             logging.error(f"Error updating classsection due to no fields being selected: {e}")
             return str(e), e.error_code
@@ -621,7 +651,7 @@ def add_enrollment():
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
 
-    port = int(os.environ.get('PORT', 3322))
+    port = int(os.environ.get('PORT', 3323))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
