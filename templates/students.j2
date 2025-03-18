@@ -22,7 +22,9 @@
         document.getElementById('lName_update').value = lName;
         document.getElementById('birthdate_update').value = birthdate;
 
-        <-- TA Quinn Downey gave Iris the idea to show current selected dropdown option by default in update form by looping through grade levels and setting selectedIndex of HTML option based on whether the text of current option matched the grade parameter. TA Quinn Downey also suggested Iris use event.preventDefault() to prevent the students page from being reloaded and hiding the update modal right after the update button is clicked.  --> 
+        {#TA Quinn Downey gave Iris the idea to show current selected dropdown option by default in update form by looping through grade levels
+        and setting selectedIndex of HTML option based on whether the text of current option matched the grade parameter.
+        TA Quinn Downey also suggested Iris use event.preventDefault() to prevent the students page from being reloaded and hiding the update modal right after the update button is clicked.#}
 
         for (var i = 0; i < document.getElementById("gradeLevel_update").options.length; i++) {
           if (document.getElementById("gradeLevel_update").options[i].text == grade) {
