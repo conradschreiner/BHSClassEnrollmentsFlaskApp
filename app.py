@@ -15,7 +15,7 @@ import logging
 from dotenv import load_dotenv, find_dotenv
 import datetime
 
-# Load our environment variables from the .env file in the root of our project. - per starter-app 
+# Load our environment variables from the .env file in the root of our project - per starter-app
 load_dotenv(find_dotenv())
 
 # Rows 21 through 34 adapted from Step 0 - Quick and Dirty Task 1 Setup of the flask-starter-app
@@ -117,8 +117,8 @@ class StartDateLaterThanEndDate(Exception):
         return f"{self.message} (HTTPS Error Code: {self.error_code})"
 
 # Routes - Note that we did away with the strategy proposed on the starter app using the db_connector.py.
-# The instructions seemed to jump back and forth between using it and not using it so we opted for implementing everything
-# within app.py. Instead of executing queries with db_connetor.py like is provided in the starter app, we found that
+# The instructions seemed to jump back and forth between using it and not using it, so we opted for implementing everything
+# within app.py. Instead of executing queries with db_connector.py like is provided in the starter app, we found that
 # establishing the connection in the app itself, and then running the queries via run_select_query(), run_select_params_query()
 # and run_change_query() was more effective and consistent.
 
