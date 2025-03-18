@@ -46,7 +46,7 @@
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center;     /* Center vertically */
-    margin:0.5%;
+    margin:0.5% auto;
     padding: 0.5%;
   }
 
@@ -69,8 +69,9 @@
   nav {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; 
     padding: 0.5%;
-    margin: 0.5%;
+    margin: 0.5% auto;
     background-color: var(--navBack);
     border: 2px solid var(--black);
     align-items: center;     /* Center vertically */
@@ -100,7 +101,6 @@ section {
   border: 1px solid var(--black);
   margin:0 auto;
   padding: 0.5%;
-
 }
 
 #update_modal{
@@ -138,6 +138,7 @@ section {
     border-radius: 2px;
     border: 2px solid var(--black);
     background-color: var(--white);
+    overflow-x: scroll;  /*This property and value was from TA Quinn Downey to help with keeping table from spilling over its container*/
   }
   caption {}
   thead {}
