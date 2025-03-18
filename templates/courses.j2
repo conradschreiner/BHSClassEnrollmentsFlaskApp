@@ -9,13 +9,13 @@
 <body>
 <nav>
     <a href="/">Home</a>
-    <a href="gradelevels">Grade Levels</a>
-    <a href="students">Students</a>
-    <a href="teachers">Teachers</a>
-    <a href="departments">Departments</a>
-    <a href="courses">Courses</a>
-    <a href="classsections">Class Sections</a>
-    <a href="enrollments">Enrollments</a>
+    <a href="/gradelevels">Grade Levels</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/departments">Departments</a>
+    <a href="/courses">Courses</a>
+    <a href="/classsections">Class Sections</a>
+    <a href="/enrollments">Enrollments</a>
 </nav>
 <section>
 <h1>Courses Table</h1>
@@ -44,11 +44,8 @@
 <form name="add_course" id="add_course" action="/courses/create" method="POST">
   <fieldset>
     <legend><strong>Add Course Record</strong></legend>
-    <div>
       <label for="courseName">Course Name: </label>
       <input type="text" id="courseName" name="courseName"/>
-    </div>
-        <div>
       <label>Department:
           <select name="department" id="department">
             <option value="0">--Select from available Department Subject Areas--</option>
