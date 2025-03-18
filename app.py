@@ -18,11 +18,6 @@ load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 
-from dotenv import load_dotenv, find_dotenv
- 
-# Load our environment variables from the .env file in the root of our project. - per starter-app
-load_dotenv(find_dotenv())
-
 # configure app to our db
 app.config['MYSQL_HOST'] = os.environ.get("host")  # replace with your database URL
 app.config['MYSQL_USER'] = os.environ.get("user")  # replace with your database username
