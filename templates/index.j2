@@ -23,33 +23,36 @@
     <dl>
       <dt>GradeLevels</dt>
       <dd>
-        GradeLevel Table Directory. This webpage presents the current GradeLevel records in the database, with the DDL
+        This page contains a READ view of the GradeLevels table in the database. It also has CREATE functionality,
+        allowing the user to insert new records via the "Add GradeLevel Record" box underneath the data table.
+        This webpage presents the current GradeLevel records in the database, with the DDL
         file loading the default Freshman, Sophomore, Junior, and Senior.
       </dd>
       <dt>Students</dt>
       <dd>
-        Lists all records in the Students table in the BHS database and new students may be added to the table by the user here.
-        There will be future functionality for the user to remove a student record from the database here via a SQL DELETE statement.
-      </dd>
+        This page contains a READ view of the Students table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add a Student" box underneath the data table. Lastly, it also has both UPDATE and DELETE functionality via the remove and update buttons. The remove button uses the flask_mysql Python library to run the SQL DELETE command against the database.
+          The update button uses a JavaScript Modal implementation to prompt user input and run the update against the database. </dd>
       <dt>Teachers</dt>
       <dd>
-        Lists all records in the Teachers table in the BHS database and new teachers may be added to the table by the user here.
+       This page contains a READ view of the Teachers table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add a Teacher" box underneath the data table. Additionally, it includes DELETE functionality via the remove button.
+          The remove button uses the flask_mysql Python library to run the SQL DELETE command against the database.
       </dd>
       <dt>Departments</dt>
       <dd>
-        Lists all records in the Departments table and new departments may be added to the table by the user here.
+        This page contains a READ view of the Departments table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add a Department" box underneath the data table.
       </dd>
       <dt>Courses</dt>
       <dd>
-        Lists all records in the Courses table and new courses may be added to the table by the user here.
+        This page contains a READ view of the Courses table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add a Course" box underneath the data table.
       </dd>
       <dt>ClassSections</dt>
       <dd>
-        Lists all records in the ClassSections table and new class sections may be added to the table by the user here.
+        This page contains a READ view of the ClassSections table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add a Teacher" box underneath the data table. Additionally, it has UPDATE functionality via the update button on the right hand side of the table. The update button uses the flask_mysql Python library to run the SQL UPDATE command against the database.
+          The logic to handle dynamically building the update statement via user input implemented on the backend using Python.
       </dd>
       <dt>Enrollments</dt>
       <dd>
-        Lists all records in the Enrollments table and new enrollments may be added to the table by the user here.
+        This page contains a READ view of the Enrollments table in the database. It also has CREATE functionality, allowing the user to insert new records via the "Add an Enrollment" box underneath the data table.
       </dd>
     </dl>
     </section>
