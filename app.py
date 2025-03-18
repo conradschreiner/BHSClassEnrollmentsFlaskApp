@@ -18,6 +18,7 @@ import datetime
 # Load our environment variables from the .env file in the root of our project. - per starter-app 
 load_dotenv(find_dotenv())
 
+# Rows 21 through 34 adapted from Step 0 - Quick and Dirty Task 1 Setup of the flask-starter-app
 app = Flask(__name__)
 
 # configure app to our db
@@ -30,6 +31,7 @@ app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 # set logger to debug mode for testing purposes messages
 logging.basicConfig(level=logging.DEBUG)
 
+# initialize mysql connection
 mysql = MySQL(app)
 
 
@@ -651,7 +653,7 @@ def add_enrollment():
             return "There was an error adding the enrollment.", 500
 
 
-# Listener
+# Listener - adapted from the flask-starter-app
 if __name__ == "__main__":
     #Start the app on port 3000, it will be different once hosted
 
