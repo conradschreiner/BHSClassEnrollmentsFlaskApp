@@ -3,9 +3,18 @@
 Below is a description of how to install, configure, and use this web application. It utilizes a MySQL database
 for data storage and manipulation, and uses Python's Flask library to interface and interact with said database.
 This app was developed by Conrad Schreiner and Iris Schwartz as the final project for CS340 Intro to
-Databases at Oregon State University. The initial inspiration for this app was from the [flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app)
+Databases at Oregon State University. The project is uses the standard Flask file and directory structure. The templates contains
+all of the html style Jinja templates which are used to render the web pages of the application using Flask. The static directory contains both the main.css in a folder titled css, and the images folder contains an image of the database schema model. The database directory houses the sql_storage folder where the DDL.sql, DML.sql and invidual SQL file used for CRUD operations are stored. In the root of the project directory, app.py is the primary file that runs the application, containing the database connection configuration and CRUD operations for interacting with the database. There are also two custom Python files in the root directory that were written by Conrad and are used within app.py. The requirements.txt, which is used to document the required Python libraries is stored in the root of the project as well as the .gitignore file that is used to excluded specific files and folders from git (such as the virtual envirnonment .venv, the .env, IDE cached files, etc.)
+
+## Citation
+This app was largely adapted from the [osu-cs340-ecampus /flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app)
 GitHub repository that was provided by the TA's. Even though we borrowed much from the starter app,
-a large portion of this project was developed organically by our team. It should also be noted that I used this GitHub repository for reference while writing this readme documentation: [markdown-cheatsheet](https://github.com/im-luka/markdown-cheatsheet).
+a large portion of this project was developed organically by our team. For example, we dropped the `db_connector.py` file completely and instead opted for configuring the connecting in app.py via the `app.config` rows and the following functions
+which were written by Conrad to stream line the process of calling `mysql.connection.cursor()` to run SQL queries. 
+It should also be noted that this GitHub repository was used for reference while writing this readme documentation: [markdown-cheatsheet](https://github.com/im-luka/markdown-cheatsheet).
+Unless otherwise noted, the SQL queries were written by our team - often using the official MySQL documentation for reference: [MySQL 9.2 Reference Manual Chapter 15 SQL Statements](https://dev.mysql.com/doc/refman/9.2/en/sql-statements.html).
+All for the webpages use Jinja templates that are rendered via the Flask library. These templates were adapted from both the [osu-cs340-ecampus /flask-starter-app](https://github.com/osu-cs340-ecampus/flask-starter-app),the official [Jinja template decoumenation](https://jinja.palletsprojects.com/en/stable/templates/), and the official 
+[Flask documentation](https://flask.palletsprojects.com/en/stable/). 
 
 ## Table of Contents
 
@@ -174,7 +183,7 @@ This step will differ depending on your installation method.
 
 #### Home Page
 
-- Basic homepage containing brief descriptions of each webpage on the webapp. We also included the Schema model for reference while engaging with the webapps CRUD functionality. At the top of home and every other page, there are navidation buttons the can be used to access each page of the web app.
+- Basic homepage containing brief descriptions of each webpage on the webapp. We also included the Schema model for reference while engaging with the webapps CRUD functionality. At the top of home and every other page, there are navigation buttons the can be used to access each page of the web app.
 
 #### Grade Levels Page
 
